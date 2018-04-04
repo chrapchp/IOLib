@@ -33,7 +33,7 @@ public:
 
   void         setPollingInterval(unsigned int aPollingInterval);
 
-  inline float getPollingInterval() __attribute__((always_inline))
+  inline unsigned int getPollingInterval() __attribute__((always_inline))
   {
     return pollingInterval;
   }

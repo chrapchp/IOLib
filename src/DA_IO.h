@@ -17,7 +17,7 @@
 
 enum IO_TYPE
 {
-  discrete, analog, i2c_ec, i2c_ph
+  discrete, analog, i2c_ec, i2c_ph, oneWireTemp
 };
 
 #endif // ifndef DA_IO_H
