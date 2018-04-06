@@ -1,5 +1,5 @@
 /*
-   FlowMeter based on
+   DA_FlowMeter based on
    Flow meter from http://www.seeedstudio.com/wiki/G1/2_Water_Flow_sensor +/- 3%
       acuracy
    Author: Peter
@@ -10,7 +10,7 @@
 #include "DA_FlowMeter.h"
 
 
-FlowMeter::FlowMeter(int aPin, int aDeltaT)
+DA_FlowMeter::DA_FlowMeter(int aPin, int aDeltaT)
 {
   mPin = aPin;
   pinMode(mPin, INPUT);
@@ -26,13 +26,13 @@ FlowMeter::FlowMeter(int aPin, int aDeltaT)
   // attach interrupt handler
 }
 
-void FlowMeter::begin()
+void DA_FlowMeter::begin()
 {
   mPrevPulseCount = mPulseCount;
   mPulseCount     = 0;
 }
 
-void FlowMeter::end()
+void DA_FlowMeter::end()
 {
   computeFlowRate();
   updateCummulativeVolume();
@@ -42,22 +42,22 @@ void FlowMeter::end()
 
 // can't rely on the mPulseCount it is cleared on every interval to calculate
 // flow per unit time
-unsigned int FlowMeter::getCurrentPulses()
+unsigned int DA_FlowMeter::getCurrentPulses()
 {
   return mPrevPulseCount;
 }
 
-void FlowMeter::updateCummulativeVolume()
+void DA_FlowMeter::updateCummulativeVolume()
 {
   mCummulativeVolume += getCurrentFlowRate();
 }
 
-void FlowMeter::setUnits(bool unit)
+void DA_FlowMeter::setUnits(bool unit)
 {
   perSecond = unit;
 }
 
-void FlowMeter::updateFlowRunTime()
+void DA_FlowMeter::updateFlowRunTime()
 {
   if (getCurrentFlowRate() == 0.)
   {
@@ -96,7 +96,7 @@ void FlowMeter::updateFlowRunTime()
 
 // Pulse frequency (Hz) in Horizontal Test= 7.5Q, Q is flow rate in L/min
 // Pulse Count / 7.5 / 60 = Q L/sec
-float FlowMeter::computeFlowRate()
+float DA_FlowMeter::computeFlowRate()
 {
   mPreviousFlowRate = mCurrentFlowRate;
 
@@ -109,27 +109,27 @@ float FlowMeter::computeFlowRate()
   return mCurrentFlowRate;
 }
 
-void FlowMeter::handleFlowDetection()
+void DA_FlowMeter::handleFlowDetection()
 {
   mPulseCount++;
 }
 
-float FlowMeter::getCurrentFlowRate()
+float DA_FlowMeter::getCurrentFlowRate()
 {
   return mCurrentFlowRate;
 }
 
-float FlowMeter::getPreviousFlowRate()
+float DA_FlowMeter::getPreviousFlowRate()
 {
   return mPreviousFlowRate;
 }
 
-float FlowMeter::getCummulativeVolume()
+float DA_FlowMeter::getCummulativeVolume()
 {
   return mCummulativeVolume;
 }
 
-void FlowMeter::dayRollOver()
+void DA_FlowMeter::dayRollOver()
 {
   float curVolume = mCummulativeVolume;
 
@@ -137,7 +137,7 @@ void FlowMeter::dayRollOver()
   mYDAYCumulativeVolume = curVolume;
 }
 
-void FlowMeter::resetStatistics()
+void DA_FlowMeter::resetStatistics()
 {
   mYDAYCumulativeVolume = 0;
   mCummulativeVolume    = 0.;
@@ -148,27 +148,27 @@ void FlowMeter::resetStatistics()
   mFlowCounts           = 0;
 }
 
-long FlowMeter::getMaxFlowDuration()
+long DA_FlowMeter::getMaxFlowDuration()
 {
   return mMaxFlowDuration;
 }
 
-long FlowMeter::getMinFlowDuration()
+long DA_FlowMeter::getMinFlowDuration()
 {
   return mMinFlowDuration;
 }
 
-long FlowMeter::getAverageFlowDuration()
+long DA_FlowMeter::getAverageFlowDuration()
 {
   return mAverageFlowDuration;
 }
 
-long FlowMeter::getTotalFlowDuration()
+long DA_FlowMeter::getTotalFlowDuration()
 {
   return mTotalFlowDuration;
 }
 
-void FlowMeter::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_FlowMeter::serialize(HardwareSerial *tracePort, bool includeCR)
 {
   *tracePort << "{pin:" << mPin << " deltaT:" << mDeltaT << "s curFlowRate:" <<
   getCurrentFlowRate();

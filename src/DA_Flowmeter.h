@@ -6,17 +6,17 @@
    Date: 2k13
  */
 
-#ifndef FlowMeter_h
-#define FlowMeter_h
+#ifndef DA_FlowMeter_h
+#define DA_FlowMeter_h
 
 // #include "WProgram.h"
 // #include <Arduino.h>  // was WProgram.h, changed to Arduino.h in 1.0
 #include <HardwareSerial.h>
 
-class FlowMeter {
+class DA_FlowMeter {
 public:
 
-  FlowMeter(int aPin,
+  DA_FlowMeter(int aPin,
             int aDeltaT); // deltaT in ms
 
   void         begin();

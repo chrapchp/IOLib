@@ -38,8 +38,8 @@ struct _oneWireEntry
   };
   bool    enabled = false;
   bool    crcErr  = false;
-  float   curTemperature;                    // "cached temperature"
-  uint8_t idx ;
+  float   curTemperature; // "cached temperature"
+  uint8_t idx;
 };
 
 typedef _oneWireEntry OneWireEntry;
@@ -53,14 +53,14 @@ public:
 
   void    enableSensor(uint8_t anIndex);
   void    disableSensor(uint8_t anIndex);
-  bool    isEnabled( uint8_t anIndex);
+  bool    isEnabled(uint8_t anIndex);
   uint8_t scanSensors();
   float   getTemperature(int index);
   void    serialize(HardwareSerial *tracePort,
                     bool            includeCR);
   void    init();
   void    onRefresh();
-  void    setBlockingRead( bool aMode ); // block on request for temperatures
+  void    setBlockingRead(bool aMode); // block on request for temperatures
   void setOnPollCallBack(void());
 
 private:
@@ -72,7 +72,7 @@ private:
   OneWireEntry temperatureSensorConfig[DA_MAX_ONE_WIRE_SENSORS];
   OneWire oneWireBus = NULL;
   DallasTemperature temperatureSensors;
-  bool readPending = false;
+  bool readPending  = false;
   bool blockingRead = true; // blocking read  default
   unsigned int savedPollingInterval;
 };
