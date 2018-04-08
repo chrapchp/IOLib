@@ -46,6 +46,15 @@ public:
   virtual void serialize(HardwareSerial *tracePort,
                          bool            includeCR);
 
+  inline bool isEnabled() __attribute__((always_inline))
+  {
+    return pollingEnabled;
+  }
+
+  inline void setEnabled( bool aMode ) __attribute__((always_inline))
+  {
+    pollingEnabled = aMode;
+  }
 protected:
 
   virtual void onRefresh() = 0;
