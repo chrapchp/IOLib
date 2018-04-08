@@ -121,6 +121,16 @@ void DA_AnalogInput::setDeadband(float aPercentage) // +/- .11 -> 11% deadband
   deadBand = aPercentage;
 }
 
+void DA_AnalogInput::setEnabled( bool aMode )
+{
+  DA_Input::setEnabled( aMode );
+  if( aMode == false )
+  {
+    currentRawSample = 0;
+    //currentScaledSample =666.0;
+  }
+
+}
 void DA_AnalogInput::serialize(HardwareSerial *tracePort, bool includeCR)
 {
   DA_Input::serialize(tracePort, false);

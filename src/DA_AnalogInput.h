@@ -54,6 +54,8 @@ public:
    *of EU Span
    */
   void setDeadband(float aPercentage);
+
+  void setEnabled( bool aMode );
   void  serialize(HardwareSerial *tracePort,
                   bool            includeCR);
 

@@ -27,6 +27,13 @@ void DA_Input::refresh()
   }
 }
 
+void DA_Input::setEnabled( bool aMode )
+{
+  pollingEnabled = aMode;
+  if( aMode == false )
+      rawValue = 0;
+}
+
 void DA_Input::setPollingInterval(unsigned int aPollingInterval)
 {
   if( aPollingInterval > 0 )

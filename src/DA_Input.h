@@ -51,11 +51,7 @@ public:
     return pollingEnabled;
   }
 
-  inline void setEnabled( bool aMode ) __attribute__((always_inline))
-  {
-    pollingEnabled = aMode;
-    rawValue = 0;
-  }
+  void setEnabled( bool aMode );
 protected:
 
   virtual void onRefresh() = 0;
