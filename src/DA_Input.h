@@ -54,6 +54,7 @@ public:
   inline void setEnabled( bool aMode ) __attribute__((always_inline))
   {
     pollingEnabled = aMode;
+    rawValue = 0;
   }
 protected:
 
