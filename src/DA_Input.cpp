@@ -29,7 +29,8 @@ void DA_Input::refresh()
 
 void DA_Input::setPollingInterval(unsigned int aPollingInterval)
 {
-  pollingInterval = aPollingInterval;
+  if( aPollingInterval > 0 )
+    pollingInterval = aPollingInterval;
 }
 
 void DA_Input::serialize(HardwareSerial *tracePort, bool includeCR)
