@@ -131,26 +131,3 @@ void DA_AnalogInput::serialize(HardwareSerial *tracePort, bool includeCR)
 
   if (includeCR) *tracePort << endl;
 }
-
-float euMin  = 0.0;
-float euMax  = 1023.0;
-float euSpan = euMax - euMin;
-
-float fmap(unsigned int raw,
-           unsigned int raw_min,
-           unsigned int raw_max,
-           float        EU_min,
-           float        EU_max);
-
-bool isOutsideDeadband(int aNewValue,
-                       int aCurValue); //
-// bool isOutsideDeadband(float aCurValue ); // deadband from full EU range
-unsigned int currentRawSample  = 0;
-unsigned int previousRawSample = 0;
-float currentScaledSample      = 0;
-
-float deadBand = DEAD_BAND_DEFAULT;
-void  (*onPoll)(float value) = NULL;
-void  (*onOutsideDeadbandDetected)(float aValue) = NULL;
-void onRefresh();
-bool isFirstSample = true; // to avoid false edge dectection
