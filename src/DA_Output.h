@@ -26,6 +26,12 @@ public:
   void         _disable();
   void         enable();
   bool         isDisabled();
+
+  inline void setEnabled( bool aMode ) __attribute__((always_inline))
+  {
+    disabled = ~aMode;
+  }
+
   virtual void serialize(HardwareSerial *tracePort, bool includeCR) {}
 
 protected:
