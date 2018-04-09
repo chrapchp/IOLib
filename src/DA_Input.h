@@ -13,7 +13,7 @@
 #define DA_INPUT_H
 #include "DA_IO.h"
 #include <HardwareSerial.h>
-#define DEFAULT_POLLING_INTERVAL 50 // ms
+#define DEFAULT_POLLING_INTERVAL 200 // ms
 class DA_Input {
 public:
 
