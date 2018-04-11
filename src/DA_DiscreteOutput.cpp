@@ -45,7 +45,7 @@ void DA_DiscreteOutput::forceActive()
 
 void DA_DiscreteOutput::disable()
 {
-DA_Output: _disable();
+  DA_Output::_disable();
   reset();
 }
 
@@ -81,7 +81,7 @@ void DA_DiscreteOutput::toggle()
 
 void DA_DiscreteOutput::serialize(HardwareSerial *tracePort, bool includeCR)
 {
-  *tracePort << "{pin:" << pin << " isActiveLow:" << isActiveLow() <<
+  *tracePort << "{pin:" << pin << " isActiveLow:" << isActiveLow() << " isDisabled:" << isDisabled() <<
   " currentState:" << currentState << " }";
 
   if (includeCR) *tracePort << endl;
