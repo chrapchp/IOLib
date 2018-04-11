@@ -34,7 +34,7 @@ public:
                    bool                             aEnableInternalPullup);
   bool getSample();                                 // return debounced current
                                                     // state
-
+  bool getRawSample();                              // return last read value
   void setOnPollCallBack(void (*callBack)(int aValue));
   void setDebounceTime(unsigned int aDebounceTime); // ms
   void setEdgeDetectType(DA_DiscreteInput::edgeDetectType aEdgeDectType);

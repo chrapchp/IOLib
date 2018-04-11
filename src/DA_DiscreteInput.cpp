@@ -25,6 +25,11 @@ DA_DiscreteInput::DA_DiscreteInput(uint8_t                          aPin,
  */
 bool DA_DiscreteInput::getSample()
 {
+  return sampleDebounced;
+}
+
+bool DA_DiscreteInput::getRawSample()
+{
   return currentRawSample;
 }
 
@@ -112,6 +117,7 @@ void DA_DiscreteInput::onRefresh()
 {
   if (debouncedRead())
   {
+    sampleDebounced = getRawSample();
     if (onPoll != NULL)
     {
       onPoll(getSample());
