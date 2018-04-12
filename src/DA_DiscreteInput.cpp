@@ -129,7 +129,8 @@ void DA_DiscreteInput::onRefresh()
 
 void DA_DiscreteInput::setDebounceTime(unsigned int aDebounceTime)
 {
-  debounceTime = aDebounceTime;
+  if( aDebounceTime > 0)
+    debounceTime = aDebounceTime;
 }
 
 void DA_DiscreteInput::setOnPollCallBack(void (*callBack)(int aValue))
