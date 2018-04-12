@@ -102,6 +102,7 @@ bool DA_DiscreteInput::debouncedRead()
   if (currentRawSample != previousDebounceRead)
   {
     // reset the debouncing timer
+    //Serial << "Reseting...";
     debounceTimestamp = millis();
   }
 
@@ -118,6 +119,7 @@ void DA_DiscreteInput::onRefresh()
   if (debouncedRead())
   {
     sampleDebounced = getRawSample();
+    //Serial << "Debounced...";
     if (onPoll != NULL)
     {
       onPoll(getSample());
@@ -125,12 +127,12 @@ void DA_DiscreteInput::onRefresh()
 
     if (edgeDectionType != None) doEdgeDetection();
   }
+      //Serial << "Waiting...";
 }
 
 void DA_DiscreteInput::setDebounceTime(unsigned int aDebounceTime)
 {
-  if( aDebounceTime > 0)
-    debounceTime = aDebounceTime;
+  if (aDebounceTime > 0) debounceTime = aDebounceTime;
 }
 
 void DA_DiscreteInput::setOnPollCallBack(void (*callBack)(int aValue))

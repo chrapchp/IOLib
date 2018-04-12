@@ -57,7 +57,7 @@ private:
 
   bool sampleDebounced = false;      // true sample ready
   unsigned int debounceTime = DEFAULT_DEBOUNCE_TIME;
-  unsigned int debounceTimestamp = 0;
+  unsigned long debounceTimestamp = 0;
   void (*onPoll)(int value) = NULL;
   void (*onEdgeDetect)(bool aValue,
                        int  aPin) = NULL;
