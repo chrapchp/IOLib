@@ -53,6 +53,7 @@ public:
 
   void    enableSensor(uint8_t anIndex);
   void    disableSensor(uint8_t anIndex);
+  void    setEnabled( bool aMode, uint8_t anIndex );
   bool    isEnabled(uint8_t anIndex);
   uint8_t scanSensors();
   float   getTemperature(int index);

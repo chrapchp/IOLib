@@ -52,6 +52,12 @@ void DA_OneWireDallasMgr::enableSensor(uint8_t anIndex)
        DA_MAX_ONE_WIRE_SENSORS)) temperatureSensorConfig[anIndex].enabled = true;
 }
 
+void DA_OneWireDallasMgr::setEnabled(bool aMode, uint8_t anIndex)
+{
+  if (aMode) enableSensor(anIndex);
+  else disableSensor(anIndex);
+}
+
 uint8_t DA_OneWireDallasMgr::scanSensors()
 {
   byte addr[8];
@@ -154,12 +160,12 @@ void DA_OneWireDallasMgr::onRefresh()
     temperatureSensors.requestTemperatures();
     readTemperatures();
   }
+
   // asynchronous read change poll rate
   // to minumum time to wait for conversion
   // when read, revert to original poll rate
   else
   {
-
     if (!readPending)
     {
       temperatureSensors.requestTemperatures();
