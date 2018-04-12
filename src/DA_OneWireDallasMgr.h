@@ -34,7 +34,7 @@ struct _oneWireEntry
   union
   {
     DeviceAddress address;
-    uint64_t      val;
+    uint64_t      uuid;
   };
   bool    enabled = false;
   bool    crcErr  = false;
@@ -63,6 +63,7 @@ public:
   void    onRefresh();
   void    setBlockingRead(bool aMode); // block on request for temperatures
   void setOnPollCallBack(void());
+  uint64_t getUIID( uint8_t anIndex );
 
 private:
 

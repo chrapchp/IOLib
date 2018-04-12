@@ -181,6 +181,17 @@ void DA_OneWireDallasMgr::onRefresh()
   }
 }
 
+  uint64_t DA_OneWireDallasMgr::getUIID( uint8_t anIndex )
+  {
+    if ((anIndex >= 0) &&
+        (anIndex <
+         DA_MAX_ONE_WIRE_SENSORS))
+         {
+           return( temperatureSensorConfig[anIndex].uuid );
+         }
+    else
+    return 0;
+  }
 void DA_OneWireDallasMgr::setOnPollCallBack(void (*callBack)())
 {
   onPoll = callBack;
