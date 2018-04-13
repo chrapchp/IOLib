@@ -98,10 +98,12 @@ void DA_FlowMeter::updateFlowRunTime()
 // Pulse Count / 7.5 / 60 = Q L/sec
 float DA_FlowMeter::computeFlowRate()
 {
-  mPreviousFlowRate = mCurrentFlowRate;
+  float errorCompensation = mDeltaT * 1000 / (millis() - mActualFlowCalcTime);
 
+  mCurrentFlowRate = errorCompensation * mPulseCount / meterFactor;
 
-  mCurrentFlowRate =   mPulseCount / 7.5;
+  mPrevPulseCount     = mPulseCount;
+  mActualFlowCalcTime = millis();
 
   if (perSecond) mCurrentFlowRate /= 60.;
 
@@ -168,16 +170,25 @@ long DA_FlowMeter::getTotalFlowDuration()
   return mTotalFlowDuration;
 }
 
+void DA_FlowMeter::setMeterFactor(float aMeterFactor)
+{
+  meterFactor = (aMeterFactor > 0 ? aMeterFactor : meterFactor);
+}
+
 void DA_FlowMeter::serialize(HardwareSerial *tracePort, bool includeCR)
 {
   *tracePort << "{pin:" << mPin << " deltaT:" << mDeltaT << "s curFlowRate:" <<
-  getCurrentFlowRate();
-  *tracePort << " L/s minFlowDuration:" << getMinFlowDuration() <<
-  "s maxFlowDuration:" << getMaxFlowDuration();
+    getCurrentFlowRate();
+
+  if (perSecond) *tracePort << " L/s";
+  else *tracePort << " L/min";
+
+  *tracePort << " minFlowDuration:" << getMinFlowDuration() <<
+    "s maxFlowDuration:" << getMaxFlowDuration();
   *tracePort << " s cummulativeVolume:" << getCummulativeVolume() <<
-  "L totalFlowDuration:" << getTotalFlowDuration();
+    "L totalFlowDuration:" << getTotalFlowDuration();
   *tracePort << " s ydayVolume:" << mYDAYCumulativeVolume << "L " <<
-  "pules/sec:" << mPulseCount << "}";
+    "pules/sec:" << mPulseCount << "}";
 
   if (includeCR) *tracePort << endl;
 }

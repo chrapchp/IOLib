@@ -35,6 +35,7 @@ public:
   long         getAverageFlowDuration(); // in seconds
   long         getTotalFlowDuration();
   void         handleFlowDetection();
+  void         setMeterFactor( float aMeterFactor );
   void         serialize(HardwareSerial *tracePort,
                          bool            includeCR);
 
@@ -57,11 +58,13 @@ private:
   int mPin;
   volatile unsigned int mPulseCount;
   unsigned int mPrevPulseCount;
-  int mDeltaT;
-  long mCurrentFlowDuration; // ms
+  int mDeltaT;  // s
+  unsigned long mActualFlowCalcTime = 0; // ms
+  unsigned long mCurrentFlowDuration;
   unsigned long mTotalFlowDuration;
   long mFlowCounts;
   bool perSecond = false;
+  float meterFactor = 1.0; // default pulse / s or  min
 };
 
 #endif // ifndef FlowMeter_h
