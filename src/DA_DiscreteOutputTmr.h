@@ -24,12 +24,12 @@ public:
   // versa
   DA_DiscreteOutputTmr(uint8_t      aPin,
                        bool         aActiveState,
-                       unsigned int aOnDurationInSec,
-                       unsigned int aDurationTimeInSec);
-  bool          setOnDuration(unsigned int aOnDurationInSec);   // true if ok,
+                       unsigned int aActiveDurationInSec,
+                       unsigned int aInactiveDurationInSec);
+  bool          setActiveDuration(unsigned int aActiveDurationInSec);   // true if ok,
                                                                 // false if time
                                                                 // was zero
-  bool          setOffDuration(unsigned int aOffDurationInSec); // true if ok,
+  bool          setInactiveDuration(unsigned int aInactiveDurationInSec); // true if ok,
                                                                 // false if time
                                                                 // was zero
   void          restart();                                      // start from
@@ -49,23 +49,23 @@ public:
                                                                 // zero,
                                                                 // bypassed if
                                                                 // disabled
-  unsigned long getCurrentOffDuration();
-  unsigned long getCurrentOnDuration();
+  unsigned long getCurrentInactiveDuration();
+  unsigned long getCurrentActiveDuration();
 
   // pseudo timer
   void          pauseTimer();
   void          resetTimer();
   void          resumeTimer();
   bool          isTimerPaused();
-  inline bool   isOnTimerActive() {
+  inline bool   isTimerActiveState() {
     return onTimerStatus == true;
   }
 
-  inline void activateOnTimer() {
+  inline void runActiveStateTimer() {
     onTimerStatus = true;
   }
 
-  inline void activateOffTimer() {
+  inline void runInactiveStateTimer() {
     onTimerStatus = false;
   }
 
@@ -73,8 +73,8 @@ protected:
 
 private:
 
-  unsigned long onDurationInMilliSec  = 0; // 0 is invalid
-  unsigned long offDurationInMilliSec = 0; // 0 is invalid
+  unsigned long activeDurationInMilliSec  = 0; // 0 is invalid
+  unsigned long inactiveDurationInMilliSec = 0; // 0 is invalid
   unsigned long pausedDuration        = 0; // pause time in millis
   unsigned long pausedStart           = 0; // millis on pause
 
