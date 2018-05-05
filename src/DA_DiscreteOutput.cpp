@@ -22,7 +22,8 @@ DA_DiscreteOutput::DA_DiscreteOutput(uint8_t aPin, bool aActiveState) : DA_Outpu
     aPin)
 {
   setActiveState(aActiveState);
-  reset();
+    reset();
+
 }
 
 void DA_DiscreteOutput::write(bool aValue)

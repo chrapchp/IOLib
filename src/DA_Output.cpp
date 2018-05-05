@@ -6,6 +6,7 @@ DA_Output::DA_Output(IO_TYPE aOutputType, uint8_t aPin)
 {
   outputType = aOutputType;
   pin        = aPin;
+
   pinMode(pin, OUTPUT);
 }
 
