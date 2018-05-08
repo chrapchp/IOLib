@@ -12,14 +12,46 @@
  */
 #include <Streaming.h>
 #include "DA_DiscreteOutputTmr.h"
+
 DA_DiscreteOutputTmr::DA_DiscreteOutputTmr(uint8_t      aPin,
                                            bool         aActiveState,
                                            unsigned int aActiveDurationInSec,
-                                           unsigned int aInactiveDurationInSec) :
-  DA_DiscreteOutput(aPin, aActiveState)
+                                           unsigned int aInactiveDurationInSec,
+                                           bool         aStartActive,
+                                           TimerMode    aTimerMode,
+                                           TimerState   aTimerState
+                                           )  : DA_DiscreteOutput(aPin,
+                                                                  aActiveState)
 {
   activeDurationInMilliSec   = (unsigned long)aActiveDurationInSec * 1000;
   inactiveDurationInMilliSec = (unsigned long)aInactiveDurationInSec * 1000;
+  setStartActive(aStartActive);
+  timerState = aTimerState;
+  timerMode  = aTimerMode;
+}
+
+void DA_DiscreteOutputTmr::doSetActiveDuration(
+  unsigned long aActiveDurationInmillis)
+{
+  activeDurationInMilliSec = aActiveDurationInmillis;
+
+  if (isTimerActiveState())
+  {
+    timerPreset       = activeDurationInMilliSec;
+    timerCurrentValue = timerPreset;
+  }
+}
+
+void DA_DiscreteOutputTmr::doSetInactiveDuration
+  (unsigned long aInActiveDurationInmillis)
+{
+  inactiveDurationInMilliSec = aInActiveDurationInmillis;
+
+  if (!isTimerActiveState())
+  {
+    timerPreset       = inactiveDurationInMilliSec;
+    timerCurrentValue = timerPreset;
+  }
 }
 
 bool DA_DiscreteOutputTmr::setActiveDuration(unsigned int aActiveDurationInSec)
@@ -28,11 +60,7 @@ bool DA_DiscreteOutputTmr::setActiveDuration(unsigned int aActiveDurationInSec)
 
   if (aActiveDurationInSec > 0)
   {
-    activeDurationInMilliSec = (unsigned long)aActiveDurationInSec * 1000;
-    if (isTimerActiveState()) {
-      timerPreset       = activeDurationInMilliSec;
-      timerCurrentValue = timerPreset;
-    }
+    doSetActiveDuration((long)aActiveDurationInSec * 1000);
     retVal = true;
   }
   return retVal;
@@ -44,12 +72,31 @@ bool DA_DiscreteOutputTmr::setInactiveDuration(unsigned int aInactiveDurationInS
 
   if (aInactiveDurationInSec > 0)
   {
-    inactiveDurationInMilliSec = (unsigned long)aInactiveDurationInSec * 1000;
+    doSetInactiveDuration((unsigned long)aInactiveDurationInSec * 1000);
+    retVal = true;
+  }
+  return retVal;
+}
 
-    if (!isTimerActiveState()) {
-      timerPreset       = inactiveDurationInMilliSec;
-      timerCurrentValue = timerPreset;
-    }
+bool DA_DiscreteOutputTmr::setActiveDuration(float aActiveDurationInSec)
+{
+  bool retVal = false;
+
+  if (aActiveDurationInSec > 0)
+  {
+    doSetActiveDuration((unsigned long)(aActiveDurationInSec * 1000));
+    retVal = true;
+  }
+  return retVal;
+}
+
+bool DA_DiscreteOutputTmr::setInactiveDuration(float aInactiveDurationInSec)
+{
+  bool retVal = false;
+
+  if (aInactiveDurationInSec > 0)
+  {
+    doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
     retVal = true;
   }
   return retVal;
@@ -66,21 +113,23 @@ void DA_DiscreteOutputTmr::serialize(HardwareSerial *tracePort, bool includeCR)
   DA_DiscreteOutput::serialize(tracePort, false);
   *tracePort << "{activeDurationInMilliSec:" <<  activeDurationInMilliSec <<
     " inactiveDurationInMilliSec:" << inactiveDurationInMilliSec <<
-    " startMode:" <<
-    startMode << " timerCurrentValue:" << timerCurrentValue << " timerMode:" <<
-    timerMode << " timerState:" << timerState << "}";
+    " startActive:" <<
+    startActive << " timerCurrentValue:" << timerCurrentValue << " timerMode:" <<
+    timerMode << " timerState:" << timerState <<
+    " activePulseTargetCount:" << activePulseTargetCount <<
+  " activePulseCount:" << activePulseCount << "}";
 
   if (includeCR) *tracePort << endl;
 }
 
-void DA_DiscreteOutputTmr::setStartDefault(bool aStartMode)
+void DA_DiscreteOutputTmr::setStartActive(bool aStartActive)
 {
-  startMode = aStartMode;
+  startActive = aStartActive;
 }
 
 bool DA_DiscreteOutputTmr::refresh()
 {
-  if (isTimerPaused() || isTimerStopped())
+  if (isTimerPaused() || isTimerStopped() || isTimerCycleCompleted())
   {
     return true;
   }
@@ -88,7 +137,7 @@ bool DA_DiscreteOutputTmr::refresh()
   if (firstRun)
   {
     // force a start with active state
-    if (startMode)
+    if (startActive)
     {
       timerPreset = activeDurationInMilliSec;
       runActiveStateTimer();
@@ -106,14 +155,14 @@ bool DA_DiscreteOutputTmr::refresh()
   unsigned long currentEpoch = millis();
   unsigned long deltaT       = (firstRun) ? 0 : abs(currentEpoch - previousEpoch);
 
-  // if (((deltaT -  pausedDuration) >= timerPreset) && !firstRun)
+
   if (((deltaT) >= timerPreset))
   {
     if (isTimerActiveState())
     {
       timerPreset = inactiveDurationInMilliSec;
 
-      if (isOneShot()) stop();
+      if (isOneShot()) onOneShot();
       else runInactiveStateTimer();
     }
     else
@@ -123,12 +172,8 @@ bool DA_DiscreteOutputTmr::refresh()
     }
 
     previousEpoch = currentEpoch;
-
-    // currentEpoch   = 0;
-    // pausedDuration = 0;
   }
 
-  // timerCurrentValue =  timerPreset - deltaT + pausedDuration;
   timerCurrentValue =  timerPreset - deltaT;
   firstRun          = false;
   return true;
@@ -151,8 +196,6 @@ unsigned long DA_DiscreteOutputTmr::getCurrentInactiveDuration()
 void DA_DiscreteOutputTmr::pauseTimer()
 {
   timerState = Paused;
-
-  // pausedStart = millis();
 }
 
 void DA_DiscreteOutputTmr::resetTimer()
@@ -166,15 +209,15 @@ void DA_DiscreteOutputTmr::resumeTimer()
   {
     timerState = Running;
 
-    // pausedDuration = abs(millis() - pausedStart);
 
     if (isTimerActiveState()) DA_DiscreteOutput::activate();
     else DA_DiscreteOutput::reset();
   }
 }
 
-void DA_DiscreteOutputTmr::start()
+void DA_DiscreteOutputTmr::start(TimerMode aTimerMode)
 {
+  timerMode = aTimerMode;
   restart();
   timerState = Running;
 }
@@ -182,5 +225,17 @@ void DA_DiscreteOutputTmr::start()
 void DA_DiscreteOutputTmr::stop()
 {
   timerState = Stopped;
+  DA_DiscreteOutput::reset();
+}
+
+void DA_DiscreteOutputTmr::onOneShot()
+{
+  timerState = CycleCompleted;
+  DA_DiscreteOutput::reset();
+}
+
+void DA_DiscreteOutputTmr::onCycleCompleted()
+{
+  timerState = CycleCompleted;
   DA_DiscreteOutput::reset();
 }

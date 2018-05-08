@@ -18,31 +18,37 @@
 
 class DA_DiscreteOutputTmr : public DA_DiscreteOutput {
 public:
-enum TimerMode { Continuous=0, OneShot };
-enum TimerState {Stopped=0, Running, Paused};
+enum TimerMode { Continuous=0, OneShot, CycleUntil, CycleEvery };
+enum TimerState {Stopped=0, Running, Paused, CycleCompleted};
 // active state if Low - during ontime, output will be low, otherwise it will
 // be set high, and visa
 // versa
+
+
+
 DA_DiscreteOutputTmr(uint8_t aPin,
                      bool aActiveState,
                      unsigned int aActiveDurationInSec,
-                     unsigned int aInactiveDurationInSec);
-bool          setActiveDuration(unsigned int aActiveDurationInSec);     // true if ok,
-// false if time
-// was zero
-bool          setInactiveDuration(unsigned int aInactiveDurationInSec);   // true if ok,
-// false if time
-// was zero
+                     unsigned int aInactiveDurationInSec,
+                     bool aActiveStart = true,
+                     TimerMode aTimerMode = Continuous,
+                     TimerState aTimerState = Stopped
+                     );
+bool          setActiveDuration(unsigned int aActiveDurationInSec);
+bool          setInactiveDuration(unsigned int aInactiveDurationInSec);
+bool          setActiveDuration(float aActiveDurationInSec);
+bool          setInactiveDuration(float aInactiveDurationInSec);
+
 void          restart();                                        // start from
                                                                 // the begining
 void          serialize(HardwareSerial *tracePort,
                         bool includeCR);
-void          setStartDefault(bool aStartMode);                 // true = begin
-                                                                // with active
-                                                                // cycle, false
-                                                                // beging with
-                                                                // inactive cycle,
-                                                                // true default
+void          setStartActive(bool aStartActive);                 // true = begin
+                                                                 // with active
+                                                                 // cycle, false
+                                                                 // beging with
+                                                                 // inactive cycle,
+                                                                 // true default
 bool          refresh();                                        // update timer
                                                                 // status true
                                                                 // if ok, false
@@ -52,7 +58,7 @@ bool          refresh();                                        // update timer
                                                                 // disabled
 unsigned long getCurrentInactiveDuration();
 unsigned long getCurrentActiveDuration();
-void start();    // start timer
+void start(TimerMode aTimerMode);    // start timer
 void stop();     // stop timer
 
 // pseudo timer
@@ -74,6 +80,14 @@ inline void runInactiveStateTimer() {
         reset();
 }
 
+inline TimerMode getTimerMode() {
+        return timerMode ;
+}
+
+inline TimerState getTimerState() {
+        return timerState ;
+}
+
 
 inline bool isOneShot() {
         return timerMode == OneShot;
@@ -92,29 +106,58 @@ inline bool isTimerStopped() {
         return timerState == Stopped;
 }
 
-
+inline bool isTimerCycleCompleted() {
+        return timerState == CycleCompleted;
+}
 inline bool isTimerPaused()
 {
         return timerState == Paused;
 }
+
+inline unsigned int  getActivePulseTarget()
+{
+        return activePulseTargetCount;
+}
+
+inline void  setActivePulseTargetCount( unsigned int aActivePulseTargetCount)
+{
+        activePulseTargetCount = aActivePulseTargetCount;
+}
+
+inline unsigned int  getActivePulseCount()
+{
+        return activePulseCount;
+}
+
+inline void  setActivePulseCount( unsigned int aActivePulseCount)
+{
+        activePulseCount = aActivePulseCount;
+}
+
 protected:
+virtual void onOneShot();
+void onCycleCompleted();
+
 
 private:
-
-TimerMode timerMode = Continuous;
-TimerState timerState = Stopped;
+void doSetActiveDuration( unsigned long aActiveDurationInmillis );
+void doSetInactiveDuration( unsigned long aInActiveDurationInmillis );
+TimerMode timerMode;
+TimerState timerState;
 unsigned long activeDurationInMilliSec  = 0;   // 0 is invalid
 unsigned long inactiveDurationInMilliSec = 0;   // 0 is invalid
-//unsigned long pausedDuration        = 0;   // pause time in millis
-//unsigned long pausedStart           = 0;   // millis on pause
 
-bool startMode                  = true;    // when first run, output will go
-                                           // active
+
+bool startActive;     // when first run, output will go
+// active
 unsigned long previousEpoch     = 0;
 unsigned long timerPreset       = 0;
 unsigned long timerCurrentValue = 0;
 bool firstRun                   = true;
 bool activeTimerStatus              = false;
+unsigned int activePulseTargetCount  = 0;
+unsigned int activePulseCount  = 0;
+
 
 };
 

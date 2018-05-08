@@ -19,10 +19,10 @@
 #define DA_PERISTALTICPUMP_DEFAULT_INACTIVE 30
 #define DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE 70 // ml per min
 
+
 class DA_PeristalticPump : public DA_DiscreteOutputTmr {
 public:
-enum   Mode {  Continuous, Volume, VolumeOverTime  };
-enum  State { Off, Dispencing };
+
 // active state if Low - during ontime, output will be low, otherwise it will
 // be set high, and visa
 // versa
@@ -30,14 +30,7 @@ DA_PeristalticPump(uint8_t aPin, bool aActiveState );
 void          serialize(HardwareSerial *tracePort,
                         bool includeCR);
 
-inline State getPumpState() __attribute__((always_inline))
-{
-        return pumpState;
-}
-inline Mode getPumpMode() __attribute__((always_inline))
-{
-        return pumpMode;
-}
+
 
 inline void resetTotalizer() __attribute__((always_inline))
 {
@@ -51,23 +44,22 @@ inline uint32_t getTotalizer() __attribute__((always_inline))
 
 
 bool dispenseVolume( uint16_t aVolume );
-
+bool dispenseVolumeEvery(uint16_t aVolume, uint16_t aInterval);
+bool dispenseVolumeOver(uint16_t aVolume, uint16_t aDuration );
+//bool dispenseContinuous();
 /**
  * set the max flow rate of the pump (ml per min)
  */
 bool setMaxFlowRate( uint16_t aFlowRate );
 
 protected:
+void onOneShot();
 
 private:
+bool isValidVolumeAndDuration( uint16_t aVolume, uint16_t aDuration );
 
-/**
- * for the given pumpMode, calculate the on/off durations
- */
-bool setDurations();
-State pumpState = Off;
-Mode pumpMode = Continuous;
 float maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
+float maxVolPerSecond = maxFlowRate / 60.;
 uint32_t totalizer = 0;
 };
 
