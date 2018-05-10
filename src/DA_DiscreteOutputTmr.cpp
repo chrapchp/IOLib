@@ -90,16 +90,11 @@ bool DA_DiscreteOutputTmr::setActiveDuration(float aActiveDurationInSec)
   return retVal;
 }
 
+
 bool DA_DiscreteOutputTmr::setInactiveDuration(float aInactiveDurationInSec)
 {
-  bool retVal = false;
-
-  if (aInactiveDurationInSec > 0)
-  {
     doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
-    retVal = true;
-  }
-  return retVal;
+  return true;
 }
 
 void DA_DiscreteOutputTmr::restart()
@@ -117,7 +112,7 @@ void DA_DiscreteOutputTmr::serialize(HardwareSerial *tracePort, bool includeCR)
     startActive << " timerCurrentValue:" << timerCurrentValue << " timerMode:" <<
     timerMode << " timerState:" << timerState <<
     " activePulseTargetCount:" << activePulseTargetCount <<
-  " activePulseCount:" << activePulseCount << "}";
+  " activePulseCount:" << activePulseCount << " activeTotalizer:" << activeTotalizer << "}";
 
   if (includeCR) *tracePort << endl;
 }
@@ -160,10 +155,21 @@ bool DA_DiscreteOutputTmr::refresh()
   {
     if (isTimerActiveState())
     {
+      activeTotalizer += activeDurationInMilliSec ;
       timerPreset = inactiveDurationInMilliSec;
 
-      if (isOneShot()) onOneShot();
-      else runInactiveStateTimer();
+      if (isOneShot())
+      {
+        onOneShot();
+      }
+      if (isCycleUntil())
+      {
+        if(++activePulseCount == getActivePulseTargetCount() )
+        onCycleCompleted();
+        else
+          Serial << " activePulseCount:" << activePulseCount;
+      }
+      runInactiveStateTimer();
     }
     else
     {
@@ -218,6 +224,7 @@ void DA_DiscreteOutputTmr::resumeTimer()
 void DA_DiscreteOutputTmr::start(TimerMode aTimerMode)
 {
   timerMode = aTimerMode;
+  activePulseCount = 0;
   restart();
   timerState = Running;
 }
@@ -231,11 +238,13 @@ void DA_DiscreteOutputTmr::stop()
 void DA_DiscreteOutputTmr::onOneShot()
 {
   timerState = CycleCompleted;
+  //Serial << " time active" << getActiveTotalizer() << endl;
   DA_DiscreteOutput::reset();
 }
 
 void DA_DiscreteOutputTmr::onCycleCompleted()
 {
   timerState = CycleCompleted;
+  Serial << "activeTotalizer:" << activeTotalizer << endl;
   DA_DiscreteOutput::reset();
 }

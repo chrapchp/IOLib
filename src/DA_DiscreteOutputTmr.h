@@ -36,8 +36,7 @@ DA_DiscreteOutputTmr(uint8_t aPin,
                      );
 bool          setActiveDuration(unsigned int aActiveDurationInSec);
 bool          setInactiveDuration(unsigned int aInactiveDurationInSec);
-bool          setActiveDuration(float aActiveDurationInSec);
-bool          setInactiveDuration(float aInactiveDurationInSec);
+
 
 void          restart();                                        // start from
                                                                 // the begining
@@ -66,6 +65,14 @@ void          pauseTimer();
 void          resetTimer();
 void          resumeTimer();
 
+inline unsigned long   getActiveTotalizer() {
+        return activeTotalizer;
+}
+
+inline void   clearActiveTotalizer() {
+        activeTotalizer = 0;
+}
+
 inline bool   isTimerActiveState() {
         return activeTimerStatus == true;
 }
@@ -81,11 +88,11 @@ inline void runInactiveStateTimer() {
 }
 
 inline TimerMode getTimerMode() {
-        return timerMode ;
+        return timerMode;
 }
 
 inline TimerState getTimerState() {
-        return timerState ;
+        return timerState;
 }
 
 
@@ -93,6 +100,9 @@ inline bool isOneShot() {
         return timerMode == OneShot;
 }
 
+inline bool isCycleUntil() {
+          return timerMode == CycleUntil;
+}
 inline void setTimerMode(TimerMode aMode)
 {
         timerMode = aMode;
@@ -114,14 +124,15 @@ inline bool isTimerPaused()
         return timerState == Paused;
 }
 
-inline unsigned int  getActivePulseTarget()
-{
-        return activePulseTargetCount;
-}
 
 inline void  setActivePulseTargetCount( unsigned int aActivePulseTargetCount)
 {
         activePulseTargetCount = aActivePulseTargetCount;
+}
+
+inline unsigned int  getActivePulseTargetCount( )
+{
+        return activePulseTargetCount;
 }
 
 inline unsigned int  getActivePulseCount()
@@ -136,8 +147,9 @@ inline void  setActivePulseCount( unsigned int aActivePulseCount)
 
 protected:
 virtual void onOneShot();
-void onCycleCompleted();
-
+virtual void onCycleCompleted();
+bool          setActiveDuration(float aActiveDurationInSec);
+bool          setInactiveDuration(float aInactiveDurationInSec);
 
 private:
 void doSetActiveDuration( unsigned long aActiveDurationInmillis );
@@ -157,6 +169,7 @@ bool firstRun                   = true;
 bool activeTimerStatus              = false;
 unsigned int activePulseTargetCount  = 0;
 unsigned int activePulseCount  = 0;
+unsigned long activeTotalizer = 0;
 
 
 };
