@@ -1,0 +1,29 @@
+@startuml
+class DA_Output {
+
+}
+
+class DA_DiscreteOutput {
+
+}
+
+class DA_DiscreteOutputTmr {
+
+}
+
+
+class DA_PeristalticPump {
+  float getDispensedVolume();
+  bool dispenseVolume( uint16_t aVolume );
+  bool dispenseVolumeEvery(uint16_t aVolume, uint16_t aInterval);
+  bool dispenseVolumeOver(uint16_t aVolume, uint16_t aDuration );
+  bool setMaxFlowRate( uint16_t aFlowRate );
+}
+
+
+DA_Output <|-- DA_DiscreteOutput
+DA_DiscreteOutput<|-- DA_DiscreteOutputTmr
+DA_DiscreteOutputTmr <|-- DA_PeristalticPump
+
+
+@enduml
