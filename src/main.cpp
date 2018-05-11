@@ -3,6 +3,7 @@
 #include <Streaming.h>
 #include <HardwareSerial.h>
 #include <ArduinoUnit.h>
+#include <Cmd.h>
 
 #include <DA_OneWireDallasMgr.h>
 #include <DA_PeristalticPump.h>
@@ -12,19 +13,20 @@
 
 #define WIRE_BUS_PIN 20 // pin
 #define ONE_TEMPERATURE_PRECISION 9
-#define XY_001_PIN 2
+#define XY_001_PIN 9    // 2
+#define HS_001_PIN 6    // 66
 
 
 // DA_OneWireDallasMgr temperatureMgr = DA_OneWireDallasMgr(&oneWire);
-DA_DiscreteInput dispenseVolumeInput = DA_DiscreteInput(66,
-                                            DA_DiscreteInput::FallingEdgeDetect,
-                                            false);
+DA_DiscreteInput dispenseVolumeInput = DA_DiscreteInput(HS_001_PIN,
+                                                        DA_DiscreteInput::FallingEdgeDetect,
+                                                        true);
 
 DA_OneWireDallasMgr temperatureMgr = DA_OneWireDallasMgr(WIRE_BUS_PIN);
 HardwareSerial     *tracePort      = &Serial;
 
 // DA_DiscreteOutputTmr XY_001 = DA_DiscreteOutputTmr(XY_001_PIN, LOW, 1, 2);
-DA_PeristalticPump XY_001 = DA_PeristalticPump(XY_001_PIN, LOW);
+DA_PeristalticPump XY_001 = DA_PeristalticPump(XY_001_PIN, HIGH);
 
 DA_DiscreteOutputTmr XY_002 = DA_DiscreteOutputTmr(3, HIGH, 1, 2);
 
@@ -48,11 +50,11 @@ void onHeartBeat()
   //  XY_001.stop();
 }
 
-
 void on_DispenseVolume()
 {
   Serial << "dispense..." << endl;
 }
+
 // DA_On
 //
 DA_NonBlockingDelay KI_001 = DA_NonBlockingDelay(2000, onHeartBeat);
@@ -61,6 +63,8 @@ DA_NonBlockingDelay KI_001 = DA_NonBlockingDelay(2000, onHeartBeat);
 
 unsigned long ctr  = 0;
 unsigned long ctr2 = 0;
+
+#ifdef UNIT_TEST
 
 // current max flow of 70 ml/min in DA_PeristalticPump.h
 // used for tests
@@ -192,52 +196,13 @@ public:
   }
 };
 
-class DA_PeristalticPumpOver : public Test {
-public:
 
-  uint32_t cur;
-  uint32_t prev;
-  uint16_t volume = 0;
-  uint16_t duration = 0;
-  DA_PeristalticPump XY_test = DA_PeristalticPump(XY_001_PIN, LOW);
-  DA_PeristalticPumpOver(const char *name, uint16_t aVolume, uint16_t aDuration)
-    : Test(name)
-  {
-    cur  = millis();
-    prev = cur;
-    XY_test.clearActiveTotalizer();
-    volume   = aVolume;
-    duration = aDuration;
-    XY_test.dispenseVolumeOver(aVolume, aDuration);
+DA_PeristalticPumpOneShot
+  DA_PeristalticPumpOneShot1("DA_PeristalticPumpOneShot1", 5, 6);
+DA_PeristalticPumpOneShot
+  DA_PeristalticPumpOneShot2("DA_PeristalticPumpOneShot2", 12, 12);
 
-      //XY_test.serialize(&Serial, true);
-  }
-
-  void loop()
-  {
-    if (abs(cur - prev) >= (duration + 10) * 1000)
-    {
-      // XY_test.serialize(tracePort, true);
-      assertNear(XY_test.getDispensedVolume(), (float)volume, 0.5);
-
-      pass(); // if assertion is ok
-    }
-    else
-    {
-      cur = millis();
-      XY_test.refresh();
-    }
-  }
-};
-
-#ifdef UNIT_TEST
- DA_PeristalticPumpOneShot
- DA_PeristalticPumpOneShot1("DA_PeristalticPumpOneShot1", 5, 6);
- DA_PeristalticPumpOneShot
-DA_PeristalticPumpOneShot2("DA_PeristalticPumpOneShot2", 12, 12);
-
-// DA_PeristalticPumpOver DA_PeristalticPumpOver1("DA_PeristalticPumpOver1", 70, 60);
-#endif
+#endif // ifdef UNIT_TEST
 
 void onTemperatureRead()
 {
@@ -251,8 +216,81 @@ void onTemperatureRead()
   ctr2 = ctr;
 }
 
+void cmdHelp(int arg_cnt, char **args)
+{
+  Stream *s = cmdGetStream();
+
+  *s <<
+  "-----------------------------------------------------------------------------"
+     << endl;
+  *s << "dispenseVolume: dv xx where xx is volume in ml" << endl;
+  *s <<
+  "dispenseVolumeEvery: de xx yy where xx is volume in ml and yy is interval in s"
+     << endl;
+  *s << "dispenseVolumeOver : do xx where xx is volume in ml and yy is span in s" << endl;
+  *s << "stop pump: stop" << endl;
+  *s <<
+  "-----------------------------------------------------------------------------"
+     << endl;
+}
+
+void cmdStopPump(int arg_cnt, char **args)
+{
+  cmdGetStream()->println("Stoping Pump...");
+  XY_001.stop();
+}
+
+void cmdDispenseVolume(int arg_cnt, char **args)
+{
+  Stream *s = cmdGetStream();
+
+  if (args[1])
+  {
+    *s << "Dispensing " << args[1] << " ml..." << endl;
+    XY_001.clearActiveTotalizer();
+    XY_001.dispenseVolume(atoi(args[1]));
+    XY_001.serialize(&Serial, true);
+  }
+  else *s << "usage: dispenseVolume xx where xx is volume in ml" << endl;
+}
+
+void cmdDispenseVolumeEvery(int arg_cnt, char **args)
+{
+  Stream *s = cmdGetStream();
+
+  if (args[2])
+  {
+    *s << "Dispensing " << args[1] << " ml every " << args[2] << "s..." << endl;
+    XY_001.clearActiveTotalizer();
+    XY_001.dispenseVolumeEvery(atoi(args[1]), atoi(args[2]));
+    XY_001.serialize(&Serial, true);
+  }
+  else *s << "usage: de xx where xx is volume in ml" << endl;
+}
+
+void cmdDispenseVolumeOver(int arg_cnt, char **args)
+{
+  Stream *s = cmdGetStream();
+
+  if (args[2])
+  {
+    *s << "Dispensing " << args[1] << " ml over " << args[2] << "s..." << endl;
+    XY_001.clearActiveTotalizer();
+    XY_001.dispenseVolumeOver(atoi(args[1]), atoi(args[2]));
+    XY_001.serialize(&Serial, true);
+  }
+  else *s << "usage: do xx where xx is volume in ml" << endl;
+}
+
+
 void setup() {
   Serial.begin(9600);
+  cmdInit(&Serial);
+  cmdAdd("help",              cmdHelp);
+  cmdAdd("stop",          cmdStopPump);
+  cmdAdd("dv",      cmdDispenseVolume);
+  cmdAdd("de", cmdDispenseVolumeEvery);
+  cmdAdd("do", cmdDispenseVolumeOver);
   dispenseVolumeInput.setOnEdgeEvent(&on_DispenseVolume);
   temperatureMgr.init();
 
@@ -269,34 +307,18 @@ void setup() {
 
   temperatureMgr.serialize(tracePort, true);
 
-  // XY_001.setTimerMode(DA_DiscreteOutputTmr::OneShot);
-  // XY_001.stop();
-  // XY_001.stop();
-  // XY_002.stop();
-  // XY_001.stop();
-  // XY_002.stop();
-
-  //  XY_002.serialize(tracePort, true);
-  //  Serial << "Delaying...";
-  // delay(2000);
-  //  Serial << "starting..." << endl;
-  //  XY_001.start();
-  //  XY_002.start();
-  // XY_002.setStartDefault( false );
   // Test::exclude("*");
 
-   //Test::include("*DA_PeristalticPumpOneShot*");
+  // Test::include("*DA_PeristalticPumpOneShot*");
   //  Test::include("*DA_Peristaltic*");
 
-  // XY_001.dispenseVolumeOver(12, 5);
-  // XY_001.dispenseVolume( 5 );
-  //  XY_001.serialize(tracePort, true);
-  //
   #ifndef UNIT_TEST
-   //XY_001.dispenseVolumeOver(5,60);
-   //XY_001.dispenseVolumeEvery(2, 5);
-   //XY_001.serialize(tracePort, true);
-  #endif
+XY_001.setMaxFlowRate( 65);
+  // XY_001.dispenseVolumeOver(5,60);
+  // XY_001.dispenseVolumeEvery(2, 5);
+  // XY_001.serialize(tracePort, true);
+  #endif // ifndef UNIT_TEST
+
   //     XY_test.dispenseVolumeOver(aVolume, aDuration);
 }
 
@@ -305,12 +327,15 @@ void loop() {
   //  ctr++;
   //  KI_001.refresh();
   #ifndef UNIT_TEST
-   //XY_001.refresh();
-   dispenseVolumeInput.refresh();
-  #endif
+  cmdPoll();
+  XY_001.refresh();
+  dispenseVolumeInput.refresh();
+
+  #endif // ifndef UNIT_TEST
+
   //  XY_002.refresh();
   //    Test::exclude("*");
 #ifdef UNIT_TEST
   Test::run();
-  #endif
+  #endif // ifdef UNIT_TEST
 }

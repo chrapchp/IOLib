@@ -71,6 +71,7 @@ bool DA_PeristalticPump::dispenseVolume(uint16_t aVolume)
     // Serial << "pumpduration:" << pumpDuration << endl;
     stop();
     setActiveDuration(pumpDuration);
+    setInactiveDuration((uint16_t) 1);
     start(OneShot);
     rv = true;
   }
@@ -110,7 +111,7 @@ bool DA_PeristalticPump::dispenseVolumeEvery(uint16_t aVolume, uint16_t aInterva
  * Dispense a volume over a period in equal intervals.
  * The DA_DiscreteOutputTmr active and inactive times are set to
  * such that the sum of (activeTime) over the duration = the desired volume
- * Accepts duration of multiples of 60s. 
+ * Accepts duration of multiples of 60s.
  * @param  aVolume   volume in ml
  * @param  aDuration duration in secondScreen
  * @return           false if params are invalid
