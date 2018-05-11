@@ -101,7 +101,7 @@ inline bool isOneShot() {
 }
 
 inline bool isCycleUntil() {
-          return timerMode == CycleUntil;
+        return timerMode == CycleUntil;
 }
 inline void setTimerMode(TimerMode aMode)
 {

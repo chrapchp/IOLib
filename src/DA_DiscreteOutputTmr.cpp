@@ -90,10 +90,9 @@ bool DA_DiscreteOutputTmr::setActiveDuration(float aActiveDurationInSec)
   return retVal;
 }
 
-
 bool DA_DiscreteOutputTmr::setInactiveDuration(float aInactiveDurationInSec)
 {
-    doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
+  doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
   return true;
 }
 
@@ -112,7 +111,8 @@ void DA_DiscreteOutputTmr::serialize(HardwareSerial *tracePort, bool includeCR)
     startActive << " timerCurrentValue:" << timerCurrentValue << " timerMode:" <<
     timerMode << " timerState:" << timerState <<
     " activePulseTargetCount:" << activePulseTargetCount <<
-  " activePulseCount:" << activePulseCount << " activeTotalizer:" << activeTotalizer << "}";
+    " activePulseCount:" << activePulseCount << " activeTotalizer:" <<
+    activeTotalizer << "}";
 
   if (includeCR) *tracePort << endl;
 }
@@ -124,6 +124,8 @@ void DA_DiscreteOutputTmr::setStartActive(bool aStartActive)
 
 bool DA_DiscreteOutputTmr::refresh()
 {
+  unsigned long currentEpoch = millis();
+
   if (isTimerPaused() || isTimerStopped() || isTimerCycleCompleted())
   {
     return true;
@@ -131,6 +133,8 @@ bool DA_DiscreteOutputTmr::refresh()
 
   if (firstRun)
   {
+    previousEpoch = currentEpoch;
+
     // force a start with active state
     if (startActive)
     {
@@ -147,27 +151,25 @@ bool DA_DiscreteOutputTmr::refresh()
   }
 
 
-  unsigned long currentEpoch = millis();
-  unsigned long deltaT       = (firstRun) ? 0 : abs(currentEpoch - previousEpoch);
-
+  //  unsigned long deltaT       = (firstRun) ? 0 : abs(currentEpoch -
+  // previousEpoch);
+  unsigned long deltaT =  abs(currentEpoch - previousEpoch);
 
   if (((deltaT) >= timerPreset))
   {
     if (isTimerActiveState())
     {
-      activeTotalizer += activeDurationInMilliSec ;
-      timerPreset = inactiveDurationInMilliSec;
+      activeTotalizer += activeDurationInMilliSec;
+      timerPreset      = inactiveDurationInMilliSec;
 
       if (isOneShot())
       {
         onOneShot();
       }
+
       if (isCycleUntil())
       {
-        if(++activePulseCount == getActivePulseTargetCount() )
-        onCycleCompleted();
-        else
-          Serial << " activePulseCount:" << activePulseCount;
+        if (++activePulseCount == getActivePulseTargetCount()) onCycleCompleted();
       }
       runInactiveStateTimer();
     }
@@ -223,7 +225,7 @@ void DA_DiscreteOutputTmr::resumeTimer()
 
 void DA_DiscreteOutputTmr::start(TimerMode aTimerMode)
 {
-  timerMode = aTimerMode;
+  timerMode        = aTimerMode;
   activePulseCount = 0;
   restart();
   timerState = Running;
@@ -238,13 +240,14 @@ void DA_DiscreteOutputTmr::stop()
 void DA_DiscreteOutputTmr::onOneShot()
 {
   timerState = CycleCompleted;
-  //Serial << " time active" << getActiveTotalizer() << endl;
+
+  // Serial << " time active" << getActiveTotalizer() << endl;
   DA_DiscreteOutput::reset();
 }
 
 void DA_DiscreteOutputTmr::onCycleCompleted()
 {
   timerState = CycleCompleted;
-  Serial << "activeTotalizer:" << activeTotalizer << endl;
+  //Serial << "activeTotalizer:" << activeTotalizer << endl;
   DA_DiscreteOutput::reset();
 }
