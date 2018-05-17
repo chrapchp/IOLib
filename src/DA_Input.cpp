@@ -34,7 +34,7 @@ void DA_Input::setEnabled( bool aMode )
       rawValue = 0;
 }
 
-void DA_Input::setPollingInterval(unsigned int aPollingInterval)
+void DA_Input::setPollingInterval(unsigned long aPollingInterval)
 {
   if( aPollingInterval > 0 )
     pollingInterval = aPollingInterval;

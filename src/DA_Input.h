@@ -31,9 +31,9 @@ public:
    * @param aPollingInterval [in ms]
    */
 
-  void         setPollingInterval(unsigned int aPollingInterval);
+  void         setPollingInterval(unsigned long aPollingInterval);
 
-  inline unsigned int getPollingInterval() __attribute__((always_inline))
+  inline unsigned long getPollingInterval() __attribute__((always_inline))
   {
     return pollingInterval;
   }
@@ -66,7 +66,7 @@ protected:
 private:
 
   unsigned long lastUpdateTime = 0;
-  unsigned int pollingInterval = DEFAULT_POLLING_INTERVAL;
+  unsigned long pollingInterval = DEFAULT_POLLING_INTERVAL;
   bool pollingEnabled          = true;
 };
 
