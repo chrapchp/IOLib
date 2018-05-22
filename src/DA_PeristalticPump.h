@@ -27,7 +27,7 @@ public:
 // be set high, and visa
 // versa
 DA_PeristalticPump(uint8_t aPin, bool aActiveState );
-void          serialize(HardwareSerial *tracePort,
+void          serialize(Stream *aOutputStream,
                         bool includeCR);
 
 float getDispensedVolume();

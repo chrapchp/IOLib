@@ -43,10 +43,10 @@ void DA_AnalogOutput::write(bool aValue)
   else writeAO(DA_MIN_VALUE);
 }
 
-void DA_AnalogOutput::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_AnalogOutput::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{pin:" << pin <<  " isDisabled:" << isDisabled() <<
+  *aOutputStream << "{pin:" << pin <<  " isDisabled:" << isDisabled() <<
     " currentValue:" << currentValue << " }";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

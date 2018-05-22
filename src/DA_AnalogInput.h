@@ -56,7 +56,7 @@ public:
   void setDeadband(float aPercentage);
 
   void setEnabled( bool aMode );
-  void  serialize(HardwareSerial *tracePort,
+  void  serialize(Stream *aOutputStream,
                   bool            includeCR);
 
 private:

@@ -13,7 +13,7 @@
 #define DA_NONBLOCKINIGDELAY_H
 
 
-#include <HardwareSerial.h>
+#include <Stream.h>
 
 
 class DA_NonBlockingDelay {
@@ -23,7 +23,7 @@ public:
                       void(*callBack)());
   void setDelay(unsigned long aDelayinMillSeconds);
   void setCallback(void (*callBack)());
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
   void refresh();
   void pause();

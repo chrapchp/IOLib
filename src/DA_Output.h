@@ -13,7 +13,7 @@
 
 #ifndef DA_OUTPUT_H
 #define DA_OUTPUT_H
-#include <HardwareSerial.h>
+#include <Stream.h>
 
 
 #include "DA_IO.h"
@@ -30,10 +30,10 @@ public:
   inline void setEnabled( bool aMode ) __attribute__((always_inline))
   {
     disabled = !aMode;
-    
+
   }
 
-  virtual void serialize(HardwareSerial *tracePort, bool includeCR) {}
+  virtual void serialize(Stream *aOutputStream, bool includeCR) {}
 
 protected:
 

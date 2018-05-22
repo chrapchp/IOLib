@@ -42,7 +42,7 @@ public:
   bool calibrateHigh();
   bool calibrateDry();
   bool calibrateLow();
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
 
 protected:

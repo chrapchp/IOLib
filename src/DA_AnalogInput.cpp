@@ -131,13 +131,13 @@ void DA_AnalogInput::setEnabled( bool aMode )
   }
 
 }
-void DA_AnalogInput::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_AnalogInput::serialize(Stream *aOutputStream, bool includeCR)
 {
-  DA_Input::serialize(tracePort, false);
+  DA_Input::serialize(aOutputStream, false);
 
-  *tracePort << "{raw in:" << getRawSample()  << " scaled Sample:" <<
+  *aOutputStream << "{raw in:" << getRawSample()  << " scaled Sample:" <<
   getScaledSample() << " deadband:" << deadBand << "euMin:" << euMin <<
   "euMax:" << euMax << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

@@ -1,6 +1,6 @@
 #include <Streaming.h>
 #include <DA_OneWireDallasMgr.h>
-#include <HardwareSerial.h>
+#include <Stream.h>
 
 DA_OneWireDallasMgr::DA_OneWireDallasMgr(int aPin) : DA_Input(oneWireTemp, aPin)
 {
@@ -100,39 +100,39 @@ uint8_t DA_OneWireDallasMgr::scanSensors()
   return idx;
 }
 
-void DA_OneWireDallasMgr::serialize(HardwareSerial *tracePort,
+void DA_OneWireDallasMgr::serialize(Stream *aOutputStream,
                                     DeviceAddress   anAddress)
 {
   for (byte i = 0; i < 8; i++) {
-    *tracePort << "0x";
+    *aOutputStream << "0x";
 
-    if (anAddress[i] < 16) *tracePort << '0';
+    if (anAddress[i] < 16) *aOutputStream << '0';
 
-    *tracePort << _HEX(anAddress[i]);
+    *aOutputStream << _HEX(anAddress[i]);
 
-    if (i < 7) *tracePort << ",";
+    if (i < 7) *aOutputStream << ",";
   }
 
-  if (OneWire::crc8(anAddress, 7) != anAddress[7]) *tracePort << "(CRC Invalid)";
+  if (OneWire::crc8(anAddress, 7) != anAddress[7]) *aOutputStream << "(CRC Invalid)";
 }
 
-void DA_OneWireDallasMgr::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_OneWireDallasMgr::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << endl << "Mapping rules" << endl;
+  *aOutputStream << endl << "Mapping rules" << endl;
   for( uint8_t i =0; i<DA_MAX_ONE_WIRE_SENSORS; i++)
   {
-    *tracePort << "TI_00" << i << "->" << oneWireTemperatureMap[i] << " cachedValue:" << getTemperature(i)<< endl;
+    *aOutputStream << "TI_00" << i << "->" << oneWireTemperatureMap[i] << " cachedValue:" << getTemperature(i)<< endl;
   }
-   *tracePort << endl << "Sensor Data" << endl;
+   *aOutputStream << endl << "Sensor Data" << endl;
   for (int i = 0; i < DA_MAX_ONE_WIRE_SENSORS; i++)
   {
-    *tracePort << "{ index:" <<    temperatureSensorConfig[i].idx << ", address:";
-    serialize(tracePort, temperatureSensorConfig[i].address);
-    *tracePort << ", enabled:" <<   temperatureSensorConfig[i].enabled << " cachedValue:" << temperatureSensorConfig[i].curTemperature << "}" <<
+    *aOutputStream << "{ index:" <<    temperatureSensorConfig[i].idx << ", address:";
+    serialize(aOutputStream, temperatureSensorConfig[i].address);
+    *aOutputStream << ", enabled:" <<   temperatureSensorConfig[i].enabled << " cachedValue:" << temperatureSensorConfig[i].curTemperature << "}" <<
       endl;
   }
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }
 
 float DA_OneWireDallasMgr::getTemperature(int aIndex)
@@ -152,9 +152,9 @@ float DA_OneWireDallasMgr::getTemperature(int aIndex)
    // TODO Alarm
 
  #ifdef PROCESS_TERMINAL
- * tracePort << "Unable to find address for Device at index " << aIndex <<
+ * aOutputStream << "Unable to find address for Device at index " << aIndex <<
     "address:";
-   printOneWireAddress(tracePort, aDevice, true);
+   printOneWireAddress(aOutputStream, aDevice, true);
  #endif // ifdef PROCESS_TERMINAL
 
    sensors.setResolution(aDevice, ONE_TEMPERATURE_PRECISION);

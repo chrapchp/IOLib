@@ -12,13 +12,13 @@ float DA_AtlasPH::parseReadResponse(char *probeData)
   return currentValue;
 }
 
-void DA_AtlasPH::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_AtlasPH::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{ I2CAddress:" << getI2CAddress() << " pH:" << getSample() <<
+  *aOutputStream << "{ I2CAddress:" << getI2CAddress() << " pH:" << getSample() <<
     " compensatedTemperature:" << getCompensatedTemperature() << " status:" <<
     getProbeCommandStatus() << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }
 
 bool DA_AtlasPH::calibrateHigh()

@@ -11,7 +11,7 @@
 
 // #include "WProgram.h"
 // #include <Arduino.h>  // was WProgram.h, changed to Arduino.h in 1.0
-#include <HardwareSerial.h>
+#include <Stream.h>
 
 class DA_FlowMeter {
 public:
@@ -36,7 +36,7 @@ public:
   long         getTotalFlowDuration();
   void         handleFlowDetection();
   void         setMeterFactor( float aMeterFactor );
-  void         serialize(HardwareSerial *tracePort,
+  void         serialize(Stream *aOutputStream,
                          bool            includeCR);
 
 protected:

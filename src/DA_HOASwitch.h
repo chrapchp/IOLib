@@ -13,7 +13,7 @@
 
 #ifndef DA_HOASwitch_h
 #define DA_HOASwitch_h
-#include <HardwareSerial.h>
+#include <Stream.h>
 #include "DA_DiscreteInput.h"
 
 class DA_HOASwitch {
@@ -35,7 +35,7 @@ public:
   // otherwise do nothing
   void          refresh();
   HOADetectType getCurrentState();
-  void          serialize(HardwareSerial *tracePort,
+  void          serialize(Stream *aOutputStream,
                           bool            includeCR);
 
 protected:

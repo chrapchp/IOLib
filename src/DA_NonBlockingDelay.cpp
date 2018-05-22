@@ -27,10 +27,10 @@ void DA_NonBlockingDelay::setCallback(void (*callBack)())
   onDelayComplete = callBack;
 }
 
-void DA_NonBlockingDelay::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_NonBlockingDelay::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{delay:" << desiredDelay << " previousTime:" << previousTime;
-  *tracePort << endl;
+  *aOutputStream << "{delay:" << desiredDelay << " previousTime:" << previousTime;
+  *aOutputStream << endl;
 }
 
 void DA_NonBlockingDelay::refresh()

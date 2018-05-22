@@ -29,7 +29,7 @@ public:
 
   void write(bool aValue);
   void writeAO( uint8_t aValue );
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
 
 

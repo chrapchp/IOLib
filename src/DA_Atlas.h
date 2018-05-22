@@ -23,7 +23,7 @@ public:
   };
   DA_Atlas(uint8_t address,
            IO_TYPE io_type);
-  virtual void      serialize(HardwareSerial *tracePort,
+  virtual void      serialize(Stream *aOutputStream,
                               bool            includeCR);
   void              doReadCommandResponse();
   void              setOnPollCallBack(void (   *callBack)(

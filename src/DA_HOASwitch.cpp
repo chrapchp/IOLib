@@ -69,10 +69,10 @@ DA_HOASwitch::HOADetectType DA_HOASwitch::getCurrentState()
   return state;
 }
 
-void DA_HOASwitch::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_HOASwitch::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "HOA:hand, auto status" << endl;
-  handSwitch.serialize(tracePort, true);
-  autoSwitch.serialize(tracePort, true);
-  *tracePort << "{state:" << state << "}" << endl;
+  *aOutputStream << "HOA:hand, auto status" << endl;
+  handSwitch.serialize(aOutputStream, true);
+  autoSwitch.serialize(aOutputStream, true);
+  *aOutputStream << "{state:" << state << "}" << endl;
 }

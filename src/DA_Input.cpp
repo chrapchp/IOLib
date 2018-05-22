@@ -40,14 +40,14 @@ void DA_Input::setPollingInterval(unsigned long aPollingInterval)
     pollingInterval = aPollingInterval;
 }
 
-void DA_Input::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_Input::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{pin:" << pin << " inputType:" <<
+  *aOutputStream << "{pin:" << pin << " inputType:" <<
   (inputType ==
    discrete ? 'D' : 'A') << " pollingInterval:" << pollingInterval <<
     "pollingEnabled:" << pollingEnabled << " }";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }
 
 void DA_Input::suspendPoll()

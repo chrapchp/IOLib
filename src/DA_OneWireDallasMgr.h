@@ -16,7 +16,7 @@
  #include <DA_Input.h>
  #include <OneWire.h>
  #include <DallasTemperature.h>
-#include <HardwareSerial.h>
+#include <Stream.h>
 
 #define DA_READ_WAIT_TIME 900 // time to wait for conversiont to complete in ms
 #define DA_MAX_ONE_WIRE_SENSORS 7
@@ -57,7 +57,7 @@ public:
   bool    isEnabled(uint8_t anIndex);
   uint8_t scanSensors();
   float   getTemperature(int index);
-  void    serialize(HardwareSerial *tracePort,
+  void    serialize(Stream *aOutputStream,
                     bool            includeCR);
   void    init();
   void    onRefresh();
@@ -71,7 +71,7 @@ uint8_t oneWireTemperatureMap[ DA_MAX_ONE_WIRE_SENSORS ];
 private:
 
   void (*onPoll)() = NULL;
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  DeviceAddress   anAddress);
   void readTemperatures();
   OneWireEntry temperatureSensorConfig[DA_MAX_ONE_WIRE_SENSORS];

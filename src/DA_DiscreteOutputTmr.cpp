@@ -102,10 +102,10 @@ void DA_DiscreteOutputTmr::restart()
   firstRun = true;
 }
 
-void DA_DiscreteOutputTmr::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_DiscreteOutputTmr::serialize(Stream *aOutputStream, bool includeCR)
 {
-  DA_DiscreteOutput::serialize(tracePort, false);
-  *tracePort << "{activeDurationInMilliSec:" <<  activeDurationInMilliSec <<
+  DA_DiscreteOutput::serialize(aOutputStream, false);
+  *aOutputStream << "{activeDurationInMilliSec:" <<  activeDurationInMilliSec <<
     " inactiveDurationInMilliSec:" << inactiveDurationInMilliSec <<
     " startActive:" <<
     startActive << " timerCurrentValue:" << timerCurrentValue << " timerMode:" <<
@@ -114,7 +114,7 @@ void DA_DiscreteOutputTmr::serialize(HardwareSerial *tracePort, bool includeCR)
     " activePulseCount:" << activePulseCount << " activeTotalizer:" <<
     activeTotalizer << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }
 
 void DA_DiscreteOutputTmr::setStartActive(bool aStartActive)

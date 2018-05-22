@@ -80,10 +80,10 @@ void DA_DiscreteOutput::toggle()
   write(!currentState);
 }
 
-void DA_DiscreteOutput::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_DiscreteOutput::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{pin:" << pin << " isActiveLow:" << isActiveLow() << " isDisabled:" << isDisabled() <<
+  *aOutputStream << "{pin:" << pin << " isActiveLow:" << isActiveLow() << " isDisabled:" << isDisabled() <<
   " currentState:" << currentState << " }";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

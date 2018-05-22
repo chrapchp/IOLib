@@ -175,20 +175,20 @@ void DA_FlowMeter::setMeterFactor(float aMeterFactor)
   meterFactor = (aMeterFactor > 0 ? aMeterFactor : meterFactor);
 }
 
-void DA_FlowMeter::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_FlowMeter::serialize(Stream *aOutputStream, bool includeCR)
 {
-  *tracePort << "{pin:" << mPin << " deltaT:" << mDeltaT << "s curFlowRate:" <<
+  *aOutputStream << "{pin:" << mPin << " deltaT:" << mDeltaT << "s curFlowRate:" <<
     getCurrentFlowRate();
 
-  if (perSecond) *tracePort << " L/s";
-  else *tracePort << " L/min";
+  if (perSecond) *aOutputStream << " L/s";
+  else *aOutputStream << " L/min";
 
-  *tracePort << " minFlowDuration:" << getMinFlowDuration() <<
+  *aOutputStream << " minFlowDuration:" << getMinFlowDuration() <<
     "s maxFlowDuration:" << getMaxFlowDuration();
-  *tracePort << " s cummulativeVolume:" << getCummulativeVolume() <<
+  *aOutputStream << " s cummulativeVolume:" << getCummulativeVolume() <<
     "L totalFlowDuration:" << getTotalFlowDuration();
-  *tracePort << " s ydayVolume:" << mYDAYCumulativeVolume << "L " <<
+  *aOutputStream << " s ydayVolume:" << mYDAYCumulativeVolume << "L " <<
     "pules/sec:" << mPulseCount << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

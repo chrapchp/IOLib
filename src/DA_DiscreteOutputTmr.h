@@ -40,7 +40,7 @@ bool          setInactiveDuration(unsigned int aInactiveDurationInSec);
 
 void          restart();                                        // start from
                                                                 // the begining
-void          serialize(HardwareSerial *tracePort,
+void          serialize(Stream *aOutputStream,
                         bool includeCR);
 void          setStartActive(bool aStartActive);                 // true = begin
                                                                  // with active

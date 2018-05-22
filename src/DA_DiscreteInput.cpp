@@ -162,12 +162,12 @@ void DA_DiscreteInput::disableInternalPullup() // default-input pin floats
   pinMode(pin, INPUT);
 }
 
-void DA_DiscreteInput::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_DiscreteInput::serialize(Stream *aOutputStream, bool includeCR)
 {
-  DA_Input::serialize(tracePort, false);
+  DA_Input::serialize(aOutputStream, false);
 
-  *tracePort << "{currentState:" << getSample()  << " debounceTime:" <<
+  *aOutputStream << "{currentState:" << getSample()  << " debounceTime:" <<
     debounceTime << " ms edgeDetectType:" << edgeDectionType << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

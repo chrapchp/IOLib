@@ -37,13 +37,13 @@ bool DA_AtlasEC::calibrateLow()
   return (receiveResponse(false, NULL) == 1) ? true : false;
 }
 
-void DA_AtlasEC::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_AtlasEC::serialize(Stream *aOutputStream, bool includeCR)
 {
-  // DA_Input::serialize( tracePort, false);
-  *tracePort << "{I2CAddress:" << getI2CAddress() << " EC:" << getSample() <<
+  // DA_Input::serialize( aOutputStream, false);
+  *aOutputStream << "{I2CAddress:" << getI2CAddress() << " EC:" << getSample() <<
   " TDS:" << getTDS() << " Salinity:" << getSalinity() << " Specific Gravity:" <<
   getSpecificGravity() << " compensatedTemperature:" <<
   getCompensatedTemperature() << " status:" << getProbeCommandStatus() << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }

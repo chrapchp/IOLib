@@ -24,17 +24,17 @@ DA_PeristalticPump::DA_PeristalticPump(uint8_t aPin,
   maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
 }
 
-void DA_PeristalticPump::serialize(HardwareSerial *tracePort, bool includeCR)
+void DA_PeristalticPump::serialize(Stream *aOutputStream, bool includeCR)
 {
-  DA_DiscreteOutputTmr::serialize(tracePort, false);
+  DA_DiscreteOutputTmr::serialize(aOutputStream, false);
 
-  // *tracePort << "{pumpState:" <<  pumpState <<
+  // *aOutputStream << "{pumpState:" <<  pumpState <<
   //  " pumpMode:" << pumpMode;
 
   // startMode:" <<
   //  startMode << " timerCurrentValue:" << timerCurrentValue << "}";
 
-  if (includeCR) *tracePort << endl;
+  if (includeCR) *aOutputStream << endl;
 }
 
 bool DA_PeristalticPump::setMaxFlowRate(uint16_t aFlowRate)

@@ -38,7 +38,7 @@ public:
   void forceActive(); // force write regardless of disabled status
   void activate();
   void toggle();
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
 
 protected:

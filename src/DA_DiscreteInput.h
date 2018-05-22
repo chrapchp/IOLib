@@ -43,7 +43,7 @@ public:
                                                     // enabled
   void disableInternalPullup();                     // default-input pin floats
 
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
 
 private:

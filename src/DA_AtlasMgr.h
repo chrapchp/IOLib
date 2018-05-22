@@ -67,7 +67,7 @@ public:
                uint16_t    aBlockingDelay);
 
   // void receiveRaw( char* aResult );
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
  char getSensorType( uint8_t aChannel );
  float getCachedValue( uint8_t aChannel );

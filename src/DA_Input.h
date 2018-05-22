@@ -12,7 +12,7 @@
 #ifndef DA_INPUT_H
 #define DA_INPUT_H
 #include "DA_IO.h"
-#include <HardwareSerial.h>
+#include <Stream.h>
 #define DEFAULT_POLLING_INTERVAL 200 // ms
 class DA_Input {
 public:
@@ -43,7 +43,7 @@ public:
     return inputType;
   }
 
-  virtual void serialize(HardwareSerial *tracePort,
+  virtual void serialize(Stream *aOutputStream,
                          bool            includeCR);
 
   inline bool isEnabled() __attribute__((always_inline))

@@ -138,12 +138,12 @@ float DA_AtlasMgr::getCachedValue( uint8_t aChannel )
   return  atlasSensors[aChannel].cachedValue;
 }
 
-void DA_AtlasMgr::serialize(HardwareSerial *tracePort,
+void DA_AtlasMgr::serialize(Stream *aOutputStream,
                             bool            includeCR)
 {
   for( int i=0; i<DA_ATLAS_MAX_CHANNELS;i++)
   {
-    *tracePort << "channel:" << i << " type:" << atlasSensors[i].type << " cached:" << atlasSensors[i].cachedValue << endl;
+    *aOutputStream << "channel:" << i << " type:" << atlasSensors[i].type << " cached:" << atlasSensors[i].cachedValue << endl;
   }
 }
 

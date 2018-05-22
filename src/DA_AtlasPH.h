@@ -21,7 +21,7 @@ public:
     return currentValue;
   }
 
-  void serialize(HardwareSerial *tracePort,
+  void serialize(Stream *aOutputStream,
                  bool            includeCR);
 
   // blocking calibrations
