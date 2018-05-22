@@ -10,6 +10,24 @@ DA_OneWireDallasMgr::DA_OneWireDallasMgr(int aPin) : DA_Input(oneWireTemp, aPin)
   temperatureSensors.setOneWire(&oneWireBus);
 }
 
+bool DA_OneWireDallasMgr::mapSensor(uint8_t x, uint8_t y)
+{
+  bool rv = false;
+
+  if ((x >= 0) && (x < DA_MAX_ONE_WIRE_SENSORS) && (y >= 0) &&
+      (y < DA_MAX_ONE_WIRE_SENSORS))
+  {
+    oneWireTemperatureMap[x] = y;
+    rv                       = true;
+  }
+  return rv;
+}
+
+void DA_OneWireDallasMgr::resetMaps()
+{
+  for (uint8_t i=0; i < DA_MAX_ONE_WIRE_SENSORS; i++) oneWireTemperatureMap[i] = i;
+}
+
 /*
    DA_OneWireDallasMgr::DA_OneWireDallasMgr(OneWire *aBus)
    {
@@ -100,11 +118,17 @@ void DA_OneWireDallasMgr::serialize(HardwareSerial *tracePort,
 
 void DA_OneWireDallasMgr::serialize(HardwareSerial *tracePort, bool includeCR)
 {
+  *tracePort << endl << "Mapping rules" << endl;
+  for( uint8_t i =0; i<DA_MAX_ONE_WIRE_SENSORS; i++)
+  {
+    *tracePort << "TI_00" << i << "->" << oneWireTemperatureMap[i] << " cachedValue:" << getTemperature(i)<< endl;
+  }
+   *tracePort << endl << "Sensor Data" << endl;
   for (int i = 0; i < DA_MAX_ONE_WIRE_SENSORS; i++)
   {
     *tracePort << "{ index:" <<    temperatureSensorConfig[i].idx << ", address:";
     serialize(tracePort, temperatureSensorConfig[i].address);
-    *tracePort << ", enabled:" <<   temperatureSensorConfig[i].enabled << "}" <<
+    *tracePort << ", enabled:" <<   temperatureSensorConfig[i].enabled << " cachedValue:" << temperatureSensorConfig[i].curTemperature << "}" <<
       endl;
   }
 
@@ -113,12 +137,11 @@ void DA_OneWireDallasMgr::serialize(HardwareSerial *tracePort, bool includeCR)
 
 float DA_OneWireDallasMgr::getTemperature(int aIndex)
 {
-  if ((aIndex < DA_MAX_ONE_WIRE_SENSORS) &&
-      temperatureSensorConfig[aIndex].enabled)
+  if (aIndex < DA_MAX_ONE_WIRE_SENSORS)
   {
     //  temperatureSensorConfig[aIndex].curTemperature =
     // temperatureSensors.getTempC(temperatureSensorConfig[aIndex].address);
-    return temperatureSensorConfig[aIndex].curTemperature;
+    return temperatureSensorConfig[oneWireTemperatureMap[aIndex]].curTemperature;
   }
   else return DA_NO_TEMPERATURE;
 }
@@ -141,6 +164,8 @@ void DA_OneWireDallasMgr::readTemperatures()
 {
   for (int i = 0; i < DA_MAX_ONE_WIRE_SENSORS; i++)
   {
+    temperatureSensorConfig[i].
+      curTemperature = DA_NO_TEMPERATURE;
     if (temperatureSensorConfig[i].enabled) temperatureSensorConfig[i].
       curTemperature = temperatureSensors.getTempC(
         temperatureSensorConfig[i].address);
@@ -181,17 +206,17 @@ void DA_OneWireDallasMgr::onRefresh()
   }
 }
 
-  uint64_t DA_OneWireDallasMgr::getUIID( uint8_t anIndex )
+uint64_t DA_OneWireDallasMgr::getUIID(uint8_t anIndex)
+{
+  if ((anIndex >= 0) &&
+      (anIndex <
+       DA_MAX_ONE_WIRE_SENSORS))
   {
-    if ((anIndex >= 0) &&
-        (anIndex <
-         DA_MAX_ONE_WIRE_SENSORS))
-         {
-           return( temperatureSensorConfig[anIndex].uuid );
-         }
-    else
-    return 0;
+    return temperatureSensorConfig[oneWireTemperatureMap[anIndex]].uuid;
   }
+  else return 0;
+}
+
 void DA_OneWireDallasMgr::setOnPollCallBack(void (*callBack)())
 {
   onPoll = callBack;

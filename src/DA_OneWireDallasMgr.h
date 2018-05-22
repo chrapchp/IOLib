@@ -64,7 +64,10 @@ public:
   void    setBlockingRead(bool aMode); // block on request for temperatures
   void setOnPollCallBack(void());
   uint64_t getUIID( uint8_t anIndex );
+  void resetMaps();
+  bool mapSensor( uint8_t x, uint8_t y );
 
+uint8_t oneWireTemperatureMap[ DA_MAX_ONE_WIRE_SENSORS ];
 private:
 
   void (*onPoll)() = NULL;
