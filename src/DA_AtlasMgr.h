@@ -10,7 +10,7 @@
  *  Using:https://www.atlas-scientific.com/product_pages/kits/env-sds-kit.html
  *  and 8:1 serial port exander
  *
- *  Future: Add calibration code. 
+ *  Future: Add calibration code.
  *
  */
 
@@ -69,6 +69,8 @@ public:
   // void receiveRaw( char* aResult );
   void serialize(HardwareSerial *tracePort,
                  bool            includeCR);
+ char getSensorType( uint8_t aChannel );
+ float getCachedValue( uint8_t aChannel );
 
 protected:
 

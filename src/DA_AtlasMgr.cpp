@@ -128,6 +128,16 @@ void DA_AtlasMgr::sendRaw(uint8_t     aChannel,
   }
 }
 
+char DA_AtlasMgr::getSensorType( uint8_t aChannel )
+{
+  return   atlasSensors[aChannel].type;
+}
+
+float DA_AtlasMgr::getCachedValue( uint8_t aChannel )
+{
+  return  atlasSensors[aChannel].cachedValue;
+}
+
 void DA_AtlasMgr::serialize(HardwareSerial *tracePort,
                             bool            includeCR)
 {
