@@ -131,7 +131,7 @@ inline uint32_t getActiveDuration( )
 
 inline uint32_t getInActiveDuration( )
 {
-  return inActiveDurationInMilliSec;
+  return inactiveDurationInMilliSec;
 }
 
 
