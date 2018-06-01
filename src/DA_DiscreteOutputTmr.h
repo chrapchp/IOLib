@@ -124,6 +124,16 @@ inline bool isTimerPaused()
         return timerState == Paused;
 }
 
+inline uint32_t getActiveDuration( )
+{
+  return activeDurationInMilliSec;
+}
+
+inline uint32_t getInActiveDuration( )
+{
+  return inActiveDurationInMilliSec;
+}
+
 
 inline void  setActivePulseTargetCount( unsigned int aActivePulseTargetCount)
 {
