@@ -22,6 +22,7 @@ DA_PeristalticPump::DA_PeristalticPump(uint8_t aPin,
                        DA_PERISTALTICPUMP_DEFAULT_INACTIVE)
 {
   maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
+  volume = 0;
 }
 
 void DA_PeristalticPump::serialize(Stream *aOutputStream, bool includeCR)
@@ -67,7 +68,7 @@ bool DA_PeristalticPump::dispenseVolume(uint16_t aVolume)
   if ((float)aVolume >= maxVolPerSecond)
   {
     pumpDuration = (aVolume / maxFlowRate) * 60;
-
+    volume = aVolume;
     // Serial << "pumpduration:" << pumpDuration << endl;
     stop();
     setActiveDuration(pumpDuration);
@@ -97,6 +98,7 @@ bool DA_PeristalticPump::dispenseVolumeEvery(uint16_t aVolume, uint16_t aInterva
     // check if asking for impossible
     if (aInterval > pumpDuration)
     {
+      volume = aVolume;
       setActiveDuration(pumpDuration);
       setInactiveDuration(aInterval);
       stop();
@@ -137,7 +139,7 @@ bool DA_PeristalticPump::dispenseVolumeOver(uint16_t aVolume, uint16_t aDuration
       if (activeCounts == 1) inactiveDuration = 1;
       else inactiveDuration = (aDuration -  totalActiveDuration) /
                               (activeCounts - 1);
-
+      volume = aVolume;
       stop();
       setTimerMode(CycleUntil);
       setActiveDuration(activeDuration);

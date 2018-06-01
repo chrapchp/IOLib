@@ -41,6 +41,10 @@ bool dispenseVolumeOver(uint16_t aVolume, uint16_t aDuration );
  */
 bool setMaxFlowRate( uint16_t aFlowRate );
 
+inline uint16_t getVolume( )
+{
+  return volume;
+}
 
 
 private:
