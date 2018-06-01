@@ -45,7 +45,7 @@ bool setMaxFlowRate( uint16_t aFlowRate );
 
 private:
 
-
+uint16_t volume;
 float maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
 float maxVolPerSecond = maxFlowRate / 60.;
 
