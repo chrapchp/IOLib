@@ -179,6 +179,8 @@ void DA_OneWireDallasMgr::readTemperatures()
 
 void DA_OneWireDallasMgr::onRefresh()
 {
+  if( !isMgrEnabled())
+    return;
   // synchronous read request and wait for temps to be ready
   if (blockingRead)
   {

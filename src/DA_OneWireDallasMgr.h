@@ -66,7 +66,19 @@ public:
   uint64_t getUIID( uint8_t anIndex );
   void resetMaps();
   bool mapSensor( uint8_t x, uint8_t y );
+  inline void enableMgr() __attribute__((always_inline))
+  {
+     managerEnabled = true;
+  }
+  inline void disableMgr() __attribute__((always_inline))
+  {
+     managerEnabled = false;
+  }
 
+  inline bool isMgrEnabled() __attribute__((always_inline))
+  {
+    return managerEnabled;
+  }
 uint8_t oneWireTemperatureMap[ DA_MAX_ONE_WIRE_SENSORS ];
 private:
 
@@ -80,6 +92,7 @@ private:
   bool readPending  = false;
   bool blockingRead = true; // blocking read  default
   unsigned int savedPollingInterval;
+  bool managerEnabled = true;
 };
 
 
