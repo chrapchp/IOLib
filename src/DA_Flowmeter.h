@@ -52,8 +52,8 @@ private:
   float mPreviousFlowRate;
   float mCummulativeVolume;
   float mYDAYCumulativeVolume;
-  long mMaxFlowDuration;
-  long mMinFlowDuration;
+  unsigned long mMaxFlowDuration;
+  unsigned long mMinFlowDuration;
   long mAverageFlowDuration;
   int mPin;
   volatile unsigned int mPulseCount;
