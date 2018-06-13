@@ -7,6 +7,8 @@
  *
  *  @section DESCRIPTION
  *  Simple class to represent an arduinio discrete output with on/off duration
+ *  - On/Off Time with either active low or active high setting
+ *  - operateates in Oneshot, continuous or until a specified time has elapsed
  *
  *
  */
@@ -14,7 +16,6 @@
 #ifndef DA_DISCRETE_OUTPUT_TMR_H
 #define DA_DISCRETE_OUTPUT_TMR_H
 #include "DA_DiscreteOutput.h"
-
 
 class DA_DiscreteOutputTmr : public DA_DiscreteOutput {
 public:
@@ -64,6 +65,7 @@ void stop();     // stop timer
 void          pauseTimer();
 void          resetTimer();
 void          resumeTimer();
+
 
 inline unsigned long   getActiveTotalizer() {
         return activeTotalizer;
@@ -126,12 +128,12 @@ inline bool isTimerPaused()
 
 inline uint32_t getActiveDuration( )
 {
-  return activeDurationInMilliSec;
+        return activeDurationInMilliSec;
 }
 
 inline uint32_t getInActiveDuration( )
 {
-  return inactiveDurationInMilliSec;
+        return inactiveDurationInMilliSec;
 }
 
 
