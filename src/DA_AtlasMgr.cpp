@@ -22,6 +22,7 @@ DA_AtlasMgr::DA_AtlasMgr(Stream& s, uint8_t as1, uint8_t as2,
   s1 = as1;
   s2 = as2;
   s3 = as3;
+  setEnabled(false);
   setPollingInterval(DA_ATLAS_POLL_INTERVAL);
   state          = IDLE;
   currentChannel = 0;
@@ -47,10 +48,12 @@ void DA_AtlasMgr::openChannel(uint8_t aChannel)
   digitalWrite(s1, bitRead(aChannel, 0));
   digitalWrite(s2, bitRead(aChannel, 1));
   digitalWrite(s3, bitRead(aChannel, 2));
+  delay(ATLAS_PORT_SELECT_DELAY);
 }
 
 uint8_t DA_AtlasMgr::getNextProbeChannel()
 {
+
   if (++currentChannel > DA_ATLAS_MAX_CHANNELS - 1) currentChannel = 0;
   return currentChannel;
 }
@@ -68,17 +71,20 @@ void DA_AtlasMgr::onRefresh()
   {
   case IDLE:
     sendRaw(getNextProbeChannel(), "R", rxBuffer, 0);
+//  sendRaw(4, "R", rxBuffer, 0);
     state = READING;
     prevSamplingRate = getPollingInterval();
-    setPollingInterval(800); // time to wait for sensor to respond
+    setPollingInterval(DA_ATLAS_READ_DELAY); // time to wait for sensor to respond
+
     break;
 
   case READING:
     setPollingInterval(prevSamplingRate);
 
-    if (readRaw(rxBuffer, 13, ' '))
+    if (readRaw(rxBuffer, 13, '\0'))
     {
-      atlasSensors[currentChannel].cachedValue =  atof(strtok(rxBuffer, " "));
+    //  atlasSensors[currentChannel].cachedValue =  atof(strtok(rxBuffer, " "));
+    atlasSensors[currentChannel].cachedValue =  atof(rxBuffer);
     }
     else atlasSensors[currentChannel].cachedValue = DA_ATLAS_NO_RESPONSE;
     state = IDLE;
@@ -89,17 +95,18 @@ void DA_AtlasMgr::onRefresh()
 bool DA_AtlasMgr::readRaw(char *aBuffer, uint8_t aSearchChar, uint8_t aRepChar)
 {
   bool hasContent = false;
+  char *temb;
+  temb = aBuffer;
 
   while (serialPort.available())
   {
     *aBuffer = serialPort.read();
-
     if (*aBuffer == aSearchChar) *aBuffer = aRepChar;
     aBuffer++;
     hasContent = true;
   }
 
-  *aBuffer = 0;
+  *aBuffer = '\0';
   return hasContent;
 }
 
@@ -119,8 +126,9 @@ void DA_AtlasMgr::sendRaw(uint8_t     aChannel,
                           uint16_t    aBlockingDelay)
 {
   openChannel(aChannel);
+  Serial.flush();
   serialPort << aCommand << endl;
-
+  serialPort.flush();
   if (aBlockingDelay > 0)
   {
     delay(aBlockingDelay);
@@ -154,7 +162,7 @@ void DA_AtlasMgr::refreshAll()
 {
   for( int i=0; i<DA_ATLAS_MAX_CHANNELS;i++)
   {
-    sendRaw(i, "R", rxBuffer, 800);
+    sendRaw(i, "R", rxBuffer, DA_ATLAS_READ_DELAY);
     if(strlen(rxBuffer))
     {
       atlasSensors[i].cachedValue =  atof(strtok(rxBuffer, " "));

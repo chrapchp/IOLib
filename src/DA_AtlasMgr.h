@@ -32,8 +32,9 @@
 #define DA_ATLAS_RTD 3
 #define DA_ATLAS_DO 4
 #define DA_ATLAS_MAX_CHANNELS 5
-
-#define DA_ATLAS_POLL_INTERVAL 5000 // ms
+#define DA_ATLAS_READ_DELAY 800 // ms
+#define DA_ATLAS_POLL_INTERVAL 10000 // ms
+#define ATLAS_PORT_SELECT_DELAY 2
 
 struct _atlasSensor
 {
