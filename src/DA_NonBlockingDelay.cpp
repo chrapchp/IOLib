@@ -10,14 +10,15 @@
  */
 #include <Streaming.h>
 #include "DA_NonBlockingDelay.h"
-DA_NonBlockingDelay::DA_NonBlockingDelay(unsigned long aDelayinMillSeconds,
+DA_NonBlockingDelay::DA_NonBlockingDelay(uint32_t aDelayinMillSeconds,
                                          void (*callBack)())
 {
   onDelayComplete = callBack;
   desiredDelay    = aDelayinMillSeconds;
+  previousTime = millis();
 }
 
-void DA_NonBlockingDelay::setDelay(unsigned long aDelayinMillSeconds)
+void DA_NonBlockingDelay::setDelay(uint32_t aDelayinMillSeconds)
 {
   desiredDelay = aDelayinMillSeconds;
 }
@@ -35,7 +36,7 @@ void DA_NonBlockingDelay::serialize(Stream *aOutputStream, bool includeCR)
 
 void DA_NonBlockingDelay::refresh()
 {
-  unsigned long currentTime;
+  uint32_t currentTime;
 
   currentTime = millis();
 

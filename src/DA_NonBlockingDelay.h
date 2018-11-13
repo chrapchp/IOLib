@@ -19,9 +19,9 @@
 class DA_NonBlockingDelay {
 public:
 
-  DA_NonBlockingDelay(unsigned long aDelayinMillSeconds,
+  DA_NonBlockingDelay(uint32_t aDelayinMillSeconds,
                       void(*callBack)());
-  void setDelay(unsigned long aDelayinMillSeconds);
+  void setDelay(uint32_t aDelayinMillSeconds);
   void setCallback(void (*callBack)());
   void serialize(Stream *aOutputStream,
                  bool            includeCR);
@@ -31,9 +31,9 @@ public:
 
 private:
 
-  unsigned long desiredDelay = 0;
+  uint32_t desiredDelay = 0;
   void (*onDelayComplete)() = NULL;
-  unsigned long previousTime = 0;
+  uint32_t previousTime = 0;
   bool paused                = false;
 };
 
