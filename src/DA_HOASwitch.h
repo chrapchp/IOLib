@@ -16,14 +16,46 @@
 #include <Stream.h>
 #include "DA_DiscreteInput.h"
 
+// HOA Switch - physical only
+//            - virtual (soft) Only (HOA switch that is soft e.g. remote)
+//            - hybrid (can be both, requires local/remote control set
+// accordingingly)
 class DA_HOASwitch {
 public:
 
+  enum HOASwitchType { physical, soft, hybrid };
   enum HOADetectType  { Unknown, Hand, Off, Auto  };
   DA_HOASwitch(uint8_t aHandPin,
                uint8_t aOffPin,
                uint8_t aAutoPin);
+  DA_HOASwitch();
 
+
+  void         setRemoteControl(bool aMode);
+
+  inline  void setSwitchType(HOASwitchType aType)  __attribute__((always_inline))
+  {
+    switchType = aType;
+  }
+
+  /**
+   * Change the HOA state of the HOA switch if is either a hybrid or soft
+   * @param  aType  Hand, Off , Auto
+   * @return       true if state change is valid and changed state occured
+   */
+  bool  setRemoteState(HOADetectType aType);
+  bool  setRemoteState(uint16_t aType);
+
+
+  inline  bool isRemoteControl()  __attribute__((always_inline))
+  {
+    return remoteActive;
+  }
+
+  inline  HOASwitchType getSwitchType()  __attribute__((always_inline))
+  {
+    return switchType;
+  }
 
   void setOnStateChangeDetect(void (*callBack)(HOADetectType aState));
 
@@ -36,7 +68,7 @@ public:
   void          refresh();
   HOADetectType getCurrentState();
   void          serialize(Stream *aOutputStream,
-                          bool            includeCR);
+                          bool    includeCR);
 
 protected:
 
@@ -45,19 +77,34 @@ private:
   DA_DiscreteInput autoSwitch = NULL;
   DA_DiscreteInput handSwitch = NULL;
   DA_DiscreteInput offSwitch = NULL;
-  HOADetectType state = Unknown;
+  HOASwitchType switchType = physical;
+  HOADetectType localState = Unknown;
+  HOADetectType remoteState = Unknown;
+  HOADetectType pendingRemoteState = Unknown;
   void (*onStateChangeDetect)(HOADetectType aState) = NULL;
   bool invokeCallBack = false;
+  bool remoteActive   = false; // false = local panel control
+
+
+  bool        doPhysicalHOA();
+  bool        doVirtualHOA();
+
 
   inline bool stateChanged(HOADetectType aPendingState)
   {
-    return state != aPendingState;
+    return localState != aPendingState;
   }
 
-  inline void changeState(HOADetectType aToState)
+  inline bool remoteStateChanged(HOADetectType aPendingState)
   {
-    state          = aToState;
-    invokeCallBack = true;
+    return pendingRemoteState != aPendingState;
+  }
+
+  inline void changeLocalState(HOADetectType aToState)
+  {
+    localState = aToState;
+
+    // invokeCallBack = true;
   }
 };
 
