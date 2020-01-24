@@ -50,8 +50,8 @@ inline uint16_t getVolume( )
 private:
 
 uint16_t volume;
-float maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
-float maxVolPerSecond = maxFlowRate / 60.;
+float maxFlowRate;
+float maxVolPerSecond ;
 
 };
 

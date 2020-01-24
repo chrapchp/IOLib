@@ -22,6 +22,7 @@ DA_PeristalticPump::DA_PeristalticPump(uint8_t aPin,
                        DA_PERISTALTICPUMP_DEFAULT_INACTIVE)
 {
   maxFlowRate = DA_PERISTALTICPUMP_DEFAULT_MAX_FLOW_RATE;
+  maxVolPerSecond = maxFlowRate / 60.;
   volume = 0;
 }
 
@@ -38,6 +39,7 @@ void DA_PeristalticPump::serialize(Stream *aOutputStream, bool includeCR)
   if (includeCR) *aOutputStream << endl;
 }
 
+// aFlowRate in ml/min 
 bool DA_PeristalticPump::setMaxFlowRate(uint16_t aFlowRate)
 {
   bool rv = false;
@@ -45,6 +47,7 @@ bool DA_PeristalticPump::setMaxFlowRate(uint16_t aFlowRate)
   if (aFlowRate > 0)
   {
     maxFlowRate = aFlowRate;
+    maxVolPerSecond = maxFlowRate / 60.;
     rv          = true;
   }
   return rv;
@@ -64,6 +67,7 @@ bool DA_PeristalticPump::dispenseVolume(uint16_t aVolume)
 {
   bool  rv = false;
   float pumpDuration;
+
 
   if ((float)aVolume >= maxVolPerSecond)
   {
@@ -90,7 +94,6 @@ bool DA_PeristalticPump::dispenseVolume(uint16_t aVolume)
 bool DA_PeristalticPump::dispenseVolumeEvery(uint16_t aVolume, uint16_t aInterval)
 {
   bool rv = false;
-
   if ((float)aVolume >= maxVolPerSecond)
   {
     float pumpDuration = (aVolume / maxFlowRate) * 60;

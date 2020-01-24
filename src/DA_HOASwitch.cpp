@@ -17,7 +17,7 @@ DA_HOASwitch::DA_HOASwitch(uint8_t aHandPin, uint8_t aOffPin, uint8_t aAutoPin)
 
   handSwitch = DA_DiscreteInput(aHandPin, DA_DiscreteInput::ToggleDetect, true);
   handSwitch.setPollingInterval(250);
-  switchType = physical;
+
 
   // autoPin = aAutoPin ;
 }
@@ -87,16 +87,21 @@ bool DA_HOASwitch::doVirtualHOA()
 
 void DA_HOASwitch::setRemoteControl(bool aMode)
 {
-  if (switchType != physical) remoteActive = aMode;
+  if (switchType != physical) 
+  { 
+    
+    remoteActive = aMode;
+    if ((onStateChangeDetect != NULL)) onStateChangeDetect(
+      getCurrentState());
+  }
 }
 
 bool DA_HOASwitch::setRemoteState(HOADetectType aType)
 {
   bool retVal = false;
-
-  if (switchType != physical)
+  if (getSwitchType() != physical)
   {
-    if (aType != getCurrentState())
+    if (aType != getCurrentState() )
     {
       pendingRemoteState = aType;
       retVal             = true;
@@ -145,7 +150,7 @@ DA_HOASwitch::HOADetectType DA_HOASwitch::getCurrentState()
 {
   HOADetectType lState = localState;
 
-  if (isRemoteControl() && (switchType != physical)) lState = remoteState;
+  if (isRemoteControl() && (getSwitchType() != physical)) lState = remoteState;
 
   return lState;
 }
@@ -155,8 +160,8 @@ void DA_HOASwitch::serialize(Stream *aOutputStream, bool includeCR)
   *aOutputStream << "HOA:hand, auto status" << endl;
   handSwitch.serialize(aOutputStream, true);
   autoSwitch.serialize(aOutputStream, true);
-  *aOutputStream << "{remoteActive:" << remoteActive << "}";
-  *aOutputStream << "{switchType:" << switchType << "}";
+  *aOutputStream << "{remoteActive:" << isRemoteControl() << "}";
+  *aOutputStream << "{switchType:" << getSwitchType() << "}";
   *aOutputStream << "{remoteState:" << remoteState << "}";
   *aOutputStream << "{pendingRemoteState:" << pendingRemoteState << "}";
   *aOutputStream << "{getCurrentState():" << getCurrentState() << "}";

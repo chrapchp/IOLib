@@ -84,7 +84,7 @@ private:
   void (*onStateChangeDetect)(HOADetectType aState) = NULL;
   bool invokeCallBack = false;
   bool remoteActive   = false; // false = local panel control
-
+  
 
   bool        doPhysicalHOA();
   bool        doVirtualHOA();
