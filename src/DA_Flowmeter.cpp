@@ -52,10 +52,7 @@ void DA_FlowMeter::updateCummulativeVolume()
   mCummulativeVolume += getCurrentFlowRate();
 }
 
-void DA_FlowMeter::setUnits(bool unit)
-{
-  perSecond = unit;
-}
+
 
 void DA_FlowMeter::updateFlowRunTime()
 {
@@ -105,9 +102,9 @@ float DA_FlowMeter::computeFlowRate()
   mPrevPulseCount     = mPulseCount;
   mActualFlowCalcTime = millis();
 
-  if (perSecond) mCurrentFlowRate /= 60.;
+   mCurrentFlowRate /= 60.;
 
-
+  
   return mCurrentFlowRate;
 }
 
@@ -178,10 +175,7 @@ void DA_FlowMeter::setMeterFactor(float aMeterFactor)
 void DA_FlowMeter::serialize(Stream *aOutputStream, bool includeCR)
 {
   *aOutputStream << "{pin:" << mPin << " deltaT:" << mDeltaT << "s curFlowRate:" <<
-    getCurrentFlowRate();
-
-  if (perSecond) *aOutputStream << " L/s";
-  else *aOutputStream << " L/min";
+    getCurrentFlowRate() << " L/s" ;
 
   *aOutputStream << " minFlowDuration:" << getMinFlowDuration() <<
     "s maxFlowDuration:" << getMaxFlowDuration();

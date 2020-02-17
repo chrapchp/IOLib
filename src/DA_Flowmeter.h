@@ -21,7 +21,6 @@ public:
 
   void         begin();
   void         end();
-  void         setUnits(bool perSec);  // perSec = true, per Minute = false;
   unsigned int getCurrentPulses();     // pulses/sec
   float        getCurrentFlowRate();   // in L/sec or L/Min
   float        getPreviousFlowRate();  // in L/sec or L/Min
@@ -39,6 +38,16 @@ public:
   void         serialize(Stream *aOutputStream,
                          bool            includeCR);
 
+  inline float getMeterFactor() __attribute__((always_inline))
+  {
+    return meterFactor;
+  }
+
+  inline int getDeltaT() __attribute__((always_inline))
+  {
+    return mDeltaT;
+  }
+
 protected:
 
   float computeFlowRate();
@@ -48,7 +57,7 @@ private:
   //   init( int aPin );
   void updateCummulativeVolume();
   void updateFlowRunTime();
-  float mCurrentFlowRate;
+  float mCurrentFlowRate;          
   float mPreviousFlowRate;
   float mCummulativeVolume;
   float mYDAYCumulativeVolume;
@@ -63,7 +72,6 @@ private:
   unsigned long mCurrentFlowDuration;
   unsigned long mTotalFlowDuration;
   long mFlowCounts;
-  bool perSecond = false;
   float meterFactor = 1.0; // default pulse / s or  min
 };
 
