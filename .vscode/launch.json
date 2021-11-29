@@ -18,7 +18,7 @@
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug (controllino_maxi_automation)"
+                "task": "Pre-Debug"
             }
         },
         {
@@ -29,6 +29,16 @@
             "projectEnvName": "controllino_maxi_automation",
             "toolchainBinDir": "C:/Users/chrap/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (without uploading)",
+            "executable": "C:/Dev/source/platformIO/libs/IOLib/.pio/build/controllino_maxi_automation/firmware.elf",
+            "projectEnvName": "controllino_maxi_automation",
+            "toolchainBinDir": "C:/Users/chrap/.platformio/packages/toolchain-atmelavr/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "loadMode": "manual"
         }
     ]
 }

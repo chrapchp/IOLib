@@ -7,6 +7,7 @@
  *
  *  @section DESCRIPTION
  *  Simple class to deal with non-blocking delay
+ *  11/15/21 - Changed abs to labs new compile error on platformio
  */
 #include <Streaming.h>
 #include "DA_NonBlockingDelay.h"
@@ -14,7 +15,7 @@ DA_NonBlockingDelay::DA_NonBlockingDelay(uint32_t aDelayinMillSeconds,
                                          void (*callBack)())
 {
   onDelayComplete = callBack;
-  desiredDelay    = aDelayinMillSeconds;
+  desiredDelay = aDelayinMillSeconds;
   previousTime = millis();
 }
 
@@ -38,16 +39,18 @@ void DA_NonBlockingDelay::refresh()
 {
   uint32_t currentTime;
 
-  currentTime = millis();
-
-
-  if ((abs(currentTime - previousTime)) >= desiredDelay)
+  if (!paused)
   {
-    previousTime = currentTime;
+    currentTime = millis();
 
-    if ((onDelayComplete != NULL) && not paused)
+    if ((labs(currentTime - previousTime)) >= desiredDelay)
     {
-      onDelayComplete();
+      previousTime = currentTime;
+
+      if ((onDelayComplete != NULL))
+      {
+        onDelayComplete();
+      }
     }
   }
 }
@@ -55,9 +58,17 @@ void DA_NonBlockingDelay::refresh()
 void DA_NonBlockingDelay::pause()
 {
   paused = true;
+  pausedTime = millis() - previousTime;
 }
 
 void DA_NonBlockingDelay::resume()
 {
   paused = false;
+  previousTime = millis() + pausedTime;
+  pausedTime = 0;
+}
+
+void DA_NonBlockingDelay::reset()
+{
+  previousTime = millis();
 }

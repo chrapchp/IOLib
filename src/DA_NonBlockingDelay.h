@@ -28,10 +28,12 @@ public:
   void refresh();
   void pause();
   void resume();
+  void reset();
 
 private:
 
   uint32_t desiredDelay = 0;
+  uint32_t pausedTime = 0;
   void (*onDelayComplete)() = NULL;
   uint32_t previousTime = 0;
   bool paused                = false;
