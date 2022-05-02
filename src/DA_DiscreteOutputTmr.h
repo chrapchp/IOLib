@@ -45,8 +45,8 @@ public:
                              bool aActiveStart = true,
                              TimerMode aTimerMode = Continuous,
                              TimerState aTimerState = Stopped);
-        bool setActiveDuration(unsigned int aActiveDurationInSec);
-        bool setInactiveDuration(unsigned int aInactiveDurationInSec);
+        bool setActiveDuration(uint16_t aActiveDurationInSec);
+        bool setInactiveDuration(uint16_t aInactiveDurationInSec);
 
         void restart(); // start from
                         // the begining
@@ -190,8 +190,8 @@ public:
 protected:
         virtual void onOneShot();
         virtual void onCycleCompleted();
-        bool setActiveDuration(float aActiveDurationInSec);
-        bool setInactiveDuration(float aInactiveDurationInSec);
+        //bool setActiveDuration(uint16_t aActiveDurationInSec);
+        //bool setInactiveDuration(uint16_t aInactiveDurationInSec);
 
 private:
         void doSetActiveDuration(unsigned long aActiveDurationInmillis);

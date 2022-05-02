@@ -53,31 +53,11 @@ void DA_DiscreteOutputTmr::doSetInactiveDuration(unsigned long aInActiveDuration
   }
 }
 
-bool DA_DiscreteOutputTmr::setActiveDuration(unsigned int aActiveDurationInSec)
-{
-  bool retVal = false;
 
-  if (aActiveDurationInSec > 0)
-  {
-    doSetActiveDuration((long)aActiveDurationInSec * 1000);
-    retVal = true;
-  }
-  return retVal;
-}
 
-bool DA_DiscreteOutputTmr::setInactiveDuration(unsigned int aInactiveDurationInSec)
-{
-  bool retVal = false;
 
-  if (aInactiveDurationInSec > 0)
-  {
-    doSetInactiveDuration((unsigned long)aInactiveDurationInSec * 1000);
-    retVal = true;
-  }
-  return retVal;
-}
 
-bool DA_DiscreteOutputTmr::setActiveDuration(float aActiveDurationInSec)
+bool DA_DiscreteOutputTmr::setActiveDuration(uint16_t aActiveDurationInSec)
 {
   bool retVal = false;
 
@@ -89,7 +69,7 @@ bool DA_DiscreteOutputTmr::setActiveDuration(float aActiveDurationInSec)
   return retVal;
 }
 
-bool DA_DiscreteOutputTmr::setInactiveDuration(float aInactiveDurationInSec)
+bool DA_DiscreteOutputTmr::setInactiveDuration(uint16_t aInactiveDurationInSec)
 {
   doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
   return true;

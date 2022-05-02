@@ -25,19 +25,19 @@ bool DA_AtlasPH::calibrateHigh()
 {
   sendCommand((char *)"Cal,high,10.00");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }
 
 bool DA_AtlasPH::calibrateMid()
 {
   sendCommand((char *)"Cal,mid,7.00");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }
 
 bool DA_AtlasPH::calibrateLow()
 {
   sendCommand((char *)"Cal,low,4.00");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }

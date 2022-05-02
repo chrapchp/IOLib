@@ -34,7 +34,7 @@ void DA_Atlas::setCompensatedTemperature(float aTemperature)
 
 }
 
-void DA_Atlas::sendCommand( char *aCommand)
+void DA_Atlas::sendCommand( const char *aCommand)
 {
   //// Serial << "sendCommand(" << aCommand << ")" << endl;
   Wire.beginTransmission(I2CAddress); // call the circuit by its ID number.
@@ -51,7 +51,7 @@ void DA_Atlas::sendCommand(char aCommand)
 }
 
 // response format
-// status: 1 (succss) | 2 (failed) } 254 (pending) | 255 (no data)
+// status: 1 (succss) | 2 (failed) | 254 (pending) | 255 (no data)
 // comma seperated response depending on request. refer to sensor datasheet
 uint8_t DA_Atlas::receiveResponse(bool aDataExpected, char *aResponseBuffer)
 {

@@ -72,7 +72,7 @@ public:
   void    retrieveCompensatedTemperature();
 
   // send a multi-character command to sensor
-  void    sendCommand(char *aCommand);
+  void    sendCommand(const char *aCommand);
 
   // send a single character command
   void    sendCommand(char aCommand);

@@ -20,21 +20,21 @@ bool DA_AtlasEC::calibrateHigh()
 {
   sendCommand("Cal,high,80000");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }
 
 bool DA_AtlasEC::calibrateDry()
 {
   sendCommand("Cal,dry");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }
 
 bool DA_AtlasEC::calibrateLow()
 {
   sendCommand("Cal,low,12880");
   delay(ATLAS_WAIT_INTERVAL);
-  return (receiveResponse(false, NULL) == 1) ? true : false;
+  return (receiveResponse(false, NULL) == 2) ? false : true;
 }
 
 void DA_AtlasEC::serialize(Stream *aOutputStream, bool includeCR)
