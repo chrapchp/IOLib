@@ -22,8 +22,8 @@ DA_DiscreteOutputTmr::DA_DiscreteOutputTmr(uint8_t aPin,
                                            TimerState aTimerState) : DA_DiscreteOutput(aPin,
                                                                                        aActiveState)
 {
-  activeDurationInMilliSec = (unsigned long)aActiveDurationInSec * 1000;
-  inactiveDurationInMilliSec = (unsigned long)aInactiveDurationInSec * 1000;
+  activeDurationInMilliSec = (unsigned long)aActiveDurationInSec * 1000ul;
+  inactiveDurationInMilliSec = (unsigned long)aInactiveDurationInSec * 1000ul;
   setStartActive(aStartActive);
   timerState = aTimerState;
   timerMode = aTimerMode;
@@ -34,7 +34,6 @@ void DA_DiscreteOutputTmr::doSetActiveDuration(
     unsigned long aActiveDurationInmillis)
 {
   activeDurationInMilliSec = aActiveDurationInmillis;
-
   if (isTimerActiveState())
   {
     timerPreset = activeDurationInMilliSec;
@@ -63,7 +62,8 @@ bool DA_DiscreteOutputTmr::setActiveDuration(uint16_t aActiveDurationInSec)
 
   if (aActiveDurationInSec > 0)
   {
-    doSetActiveDuration((unsigned long)(aActiveDurationInSec * 1000));
+
+    doSetActiveDuration((unsigned long)(aActiveDurationInSec * 1000ul));
     retVal = true;
   }
   return retVal;
@@ -71,7 +71,7 @@ bool DA_DiscreteOutputTmr::setActiveDuration(uint16_t aActiveDurationInSec)
 
 bool DA_DiscreteOutputTmr::setInactiveDuration(uint16_t aInactiveDurationInSec)
 {
-  doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000));
+  doSetInactiveDuration((unsigned long)(aInactiveDurationInSec * 1000ul));
   return true;
 }
 
