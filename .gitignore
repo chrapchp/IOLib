@@ -3,4 +3,14 @@
 .clang_complete
 .gcc-flags.json
 .vscode.json
-lib
+.pio/*
+.pio/build/project.checksum
+.pio/build/project.checksum
+.pio/build/controllino_maxi_automation/idedata.json
+.pio/libdeps/controllino_maxi_automation/commandParser
+.pio/libdeps/controllino_maxi_automation/ethernet
+.pio/libdeps/megaatmega2560/commandParser
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/c_cpp_properties.json
+

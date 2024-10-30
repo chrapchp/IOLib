@@ -83,12 +83,12 @@ void setup()
 {
 
     pinMode(TEST_PULSE_PIN, OUTPUT);
-
+    delay(500);
     UNITY_BEGIN();
     RUN_TEST(test_meter_factor_default);
     RUN_TEST(test_meter_factor);
     RUN_TEST(test_meter_deltaT);
-
+    UNITY_END();
     // set up conditions for the rest of the tests
     FT_001.setMeterFactor(1.0/60.0);
 

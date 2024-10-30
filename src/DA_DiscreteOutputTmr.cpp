@@ -125,7 +125,9 @@ bool DA_DiscreteOutputTmr::refresh()
 
   //  unsigned long deltaT       = (firstRun) ? 0 : abs(currentEpoch -
   // previousEpoch);
-  unsigned long deltaT = abs(currentEpoch - previousEpoch);
+  //unsigned long deltaT = abs(currentEpoch - previousEpoch);
+  
+  unsigned long deltaT = currentEpoch - previousEpoch;
 
   if (((deltaT) >= timerPreset))
   {
