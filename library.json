@@ -1,0 +1,28 @@
+{
+    "name": "IOLib",
+    "version": "1.1",
+    "keywords": "",
+    "description": "Simple I/O library for PLC like I/O functions",
+    "authors":
+    [
+      {
+          "name": "peter",
+          "url": "https://github.com/chrapchp"
+      }
+    ],
+    "dependencies": {
+        "paulstoffregen/OneWire": "^2.3.8",
+        "milesburton/DallasTemperature": "^3.11.0"
+    },
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/chrapchp/IOLib.git"
+    },
+
+
+    "frameworks": "arduino",
+    "platforms": "*"
+ 
+  }
+
