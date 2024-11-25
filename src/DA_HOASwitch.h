@@ -74,9 +74,9 @@ protected:
 
 private:
 
-  DA_DiscreteInput autoSwitch = NULL;
-  DA_DiscreteInput handSwitch = NULL;
-  DA_DiscreteInput offSwitch = NULL;
+  DA_DiscreteInput autoSwitch;
+  DA_DiscreteInput handSwitch;
+  DA_DiscreteInput offSwitch;
   HOASwitchType switchType = physical;
   HOADetectType localState = Unknown;
   HOADetectType remoteState = Unknown;

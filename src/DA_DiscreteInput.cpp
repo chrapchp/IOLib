@@ -157,6 +157,16 @@ void DA_DiscreteInput::enableInternalPullup() // internal pull up resitor
   pinMode(pin, INPUT_PULLUP);
 }
 
+#if defined(ESP8266)
+void DA_DiscreteInput::enableInternalPulldown() // internal pull up resitor
+                                              // enabled
+{
+
+    pinMode(pin, INPUT_PULLDOWN_16);
+
+  //pinMode(pin, INPUT_PULLDOWN;
+}
+#endif 
 void DA_DiscreteInput::disableInternalPullup() // default-input pin floats
 {
   pinMode(pin, INPUT);

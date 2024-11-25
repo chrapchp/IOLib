@@ -10,19 +10,28 @@
  */
 #include <Streaming.h>
 #include "DA_HOASwitch.h"
-DA_HOASwitch::DA_HOASwitch(uint8_t aHandPin, uint8_t aOffPin, uint8_t aAutoPin)
+
+
+#define HOA_HELPER_INIT                                                           \
+    autoSwitch(aAutoPin, DA_DiscreteInput::ToggleDetect, true),                     \
+    handSwitch(aHandPin, DA_DiscreteInput::ToggleDetect, true), \
+    offSwitch(aOffPin, DA_DiscreteInput::ToggleDetect, true)
+
+
+
+DA_HOASwitch::DA_HOASwitch(uint8_t aHandPin, uint8_t aOffPin, uint8_t aAutoPin):  HOA_HELPER_INIT
 {
-  autoSwitch = DA_DiscreteInput(aAutoPin, DA_DiscreteInput::ToggleDetect, true);
+  //autoSwitch = DA_DiscreteInput(aAutoPin, DA_DiscreteInput::ToggleDetect, true);
   autoSwitch.setPollingInterval(250);
 
-  handSwitch = DA_DiscreteInput(aHandPin, DA_DiscreteInput::ToggleDetect, true);
+ // handSwitch = DA_DiscreteInput(aHandPin, DA_DiscreteInput::ToggleDetect, true);
   handSwitch.setPollingInterval(250);
 
 
   // autoPin = aAutoPin ;
 }
 
-DA_HOASwitch::DA_HOASwitch() {
+DA_HOASwitch::DA_HOASwitch():autoSwitch(0), handSwitch(0), offSwitch(0) {
   switchType   = soft;
   remoteActive = true;
 }

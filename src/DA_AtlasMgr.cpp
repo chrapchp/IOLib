@@ -95,8 +95,7 @@ void DA_AtlasMgr::onRefresh()
 bool DA_AtlasMgr::readRaw(char *aBuffer, uint8_t aSearchChar, uint8_t aRepChar)
 {
   bool hasContent = false;
-  char *temb;
-  temb = aBuffer;
+  
 
   while (serialPort.available())
   {

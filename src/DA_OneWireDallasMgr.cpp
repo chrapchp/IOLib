@@ -2,10 +2,8 @@
 #include <DA_OneWireDallasMgr.h>
 #include <Stream.h>
 
-DA_OneWireDallasMgr::DA_OneWireDallasMgr(int aPin) : DA_Input(oneWireTemp, aPin)
+DA_OneWireDallasMgr::DA_OneWireDallasMgr(int aPin) : DA_Input(oneWireTemp, aPin), oneWireBus(aPin)
 {
-  // OneWire oneWire(WIRE_BUS_PIN);
-  oneWireBus = OneWire(aPin);
 
   temperatureSensors.setOneWire(&oneWireBus);
 }

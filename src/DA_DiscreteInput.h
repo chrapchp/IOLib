@@ -41,6 +41,10 @@ public:
   void setOnEdgeEvent(void (*callBack)(bool aValue, int aPin));
   void enableInternalPullup();                      // internal pull up resitor
                                                     // enabled
+#if defined(ESP8266)
+  void enableInternalPulldown();                    // internal pull down resitor
+                                                    // enabled
+#endif                                                    
   void disableInternalPullup();                     // default-input pin floats
 
   void serialize(Stream *aOutputStream,

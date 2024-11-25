@@ -11,7 +11,7 @@ DA_Atlas::DA_Atlas(uint8_t address, IO_TYPE io_type) : DA_Input(io_type)
 void DA_Atlas::setCompensatedTemperature(float aTemperature)
 {
   probeState = writingCompensatedTemperature;
-  char tempCommand[10]; // "T,12.5"
+  char tempCommand[15]; // "T,12.5"
 
   // there was a read request just before a temperature compensate
   // finish the read
@@ -20,7 +20,7 @@ void DA_Atlas::setCompensatedTemperature(float aTemperature)
     processReadResponse(false);
     readResponsePending = false;
   }
-  char floatStr[10];
+  char floatStr[12];
   dtostrf(aTemperature, 4, 1, floatStr);
   sprintf(tempCommand, "T,%s", floatStr);
 

@@ -87,7 +87,7 @@ private:
                  DeviceAddress   anAddress);
   void readTemperatures();
   OneWireEntry temperatureSensorConfig[DA_MAX_ONE_WIRE_SENSORS];
-  OneWire oneWireBus = NULL;
+  OneWire oneWireBus;
   DallasTemperature temperatureSensors;
   bool readPending  = false;
   bool blockingRead = true; // blocking read  default
