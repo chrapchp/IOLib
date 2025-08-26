@@ -11,7 +11,7 @@
  *
  */
 #include <Streaming.h>
-#include <Math.h>
+#include <math.h>
 #include "DA_PeristalticPump.h"
 
 DA_PeristalticPump::DA_PeristalticPump(uint8_t aPin,
