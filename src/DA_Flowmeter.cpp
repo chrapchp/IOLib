@@ -7,7 +7,7 @@
  */
 
 #include <Streaming.h>
-#include "DA_FlowMeter.h"
+#include "DA_Flowmeter.h"
 
 
 DA_FlowMeter::DA_FlowMeter(int aPin, int aDeltaT)
