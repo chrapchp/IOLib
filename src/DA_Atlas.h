@@ -23,8 +23,8 @@ public:
   };
   DA_Atlas(uint8_t address,
            IO_TYPE io_type);
-  virtual void      serialize(Stream *aOutputStream,
-                              bool            includeCR);
+  virtual ~DA_Atlas();  // ← add this if missing           
+  virtual void      serialize(Stream *aOutputStream,bool includeCR)=0;
   void              doReadCommandResponse();
   void              setOnPollCallBack(void (   *callBack)(
                                         IO_TYPE type,
@@ -84,7 +84,7 @@ public:
 protected:
 
   // parse messages specific to the sensor
-  virtual float parseReadResponse(char *probeData);
+  virtual float parseReadResponse(char *probeData)=0;
 
   // process message from a read sensor request
   float         processReadResponse(bool invokeCallBack);

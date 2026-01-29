@@ -208,3 +208,6 @@ int DA_Atlas::calibrateQuery()
    sendCommand(tempCommand);
    }
  */
+DA_Atlas::~DA_Atlas() {
+    // empty is fine, or clean up resources if needed
+}
