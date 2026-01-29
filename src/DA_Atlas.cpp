@@ -37,8 +37,10 @@ void DA_Atlas::setCompensatedTemperature(float aTemperature)
 void DA_Atlas::sendCommand( const char *aCommand)
 {
   //// Serial << "sendCommand(" << aCommand << ")" << endl;
+  if (!aCommand || !*aCommand) return;  // skip empty/null
+
   Wire.beginTransmission(I2CAddress); // call the circuit by its ID number.
-  Wire.write(aCommand);               // transmit the command
+  Wire.write(reinterpret_cast<const uint8_t*>(aCommand), strlen(aCommand));
   Wire.endTransmission();             // end the I2C data transmission.
 }
 
