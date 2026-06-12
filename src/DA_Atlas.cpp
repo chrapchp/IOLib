@@ -8,6 +8,12 @@ DA_Atlas::DA_Atlas(uint8_t address, IO_TYPE io_type) : DA_Input(io_type)
   probeState = reading;
 }
 
+bool DA_Atlas::isConnected()
+{
+    Wire.beginTransmission(I2CAddress);
+    return (Wire.endTransmission() == 0);
+}
+
 void DA_Atlas::setCompensatedTemperature(float aTemperature)
 {
   probeState = writingCompensatedTemperature;

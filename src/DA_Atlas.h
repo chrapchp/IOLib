@@ -78,7 +78,7 @@ public:
   void    sendCommand(char aCommand);
   uint8_t receiveResponse(bool  aDataExpected,
                           char *aResponseBuffer);
-
+  bool isConnected();
   // void changeI2CAddress( uint8_t address );
 
 protected:
@@ -107,6 +107,7 @@ private:
   unsigned int previousPollingInterval;
   float pendingCompensatedTemperature = 0.0;
   float compensatedTemperature        = 0.0;
+
 };
 
 #endif // ifndef DA_ATALAS__H
