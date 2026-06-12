@@ -106,8 +106,9 @@ float DA_Atlas::processReadResponse(bool invokeCallBack)
   return currentValue;
 }
 
-void DA_Atlas::retrieveCompensatedTemperature()
+bool DA_Atlas::retrieveCompensatedTemperature()
 {
+if(isConnected() == false) return false;
   char probeData[ATLAS_RESPONSE_BUFFER_SIZE];
 
   sendCommand((char *) "T,?");
@@ -118,6 +119,7 @@ void DA_Atlas::retrieveCompensatedTemperature()
     atof(strtok(probeData, ","));
     compensatedTemperature = atof(strtok(NULL, ","));
   }
+  return true;
 }
 
 // read probe data e.g. pH, EC
@@ -138,8 +140,14 @@ void DA_Atlas::doRead()
 
 // each poll request alternates between send command and read the results
 // no call to delay()
-void DA_Atlas::onRefresh()
+bool DA_Atlas::onRefresh()
 {
+  if (!isConnected())
+  {
+
+    return false;
+  }
+
   switch (probeState)
   {
   case reading:
@@ -174,6 +182,7 @@ void DA_Atlas::onRefresh()
 
     // statement(s);
   }
+  return true;
 }
 
 void DA_Atlas::setOnPollCallBack(void (*callBack)(IO_TYPE type,

@@ -69,7 +69,7 @@ public:
 
   // retrieve the temperature compensation value from sensor
   // blocking. Should be invoked during start-up only
-  void    retrieveCompensatedTemperature();
+  bool    retrieveCompensatedTemperature();
 
   // send a multi-character command to sensor
   void    sendCommand(const char *aCommand);
@@ -96,7 +96,7 @@ protected:
 private:
 
   void (*onPoll)(IO_TYPE type, float value) = NULL;
-  void onRefresh();
+  bool onRefresh();
   unsigned int responsWaitTime       = 900; // 900 ms for reads, 600 ms for
                                             // temperature and calibrate
   int I2CAddress                     = 0;
