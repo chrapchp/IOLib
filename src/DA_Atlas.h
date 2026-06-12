@@ -96,7 +96,7 @@ protected:
 private:
 
   void (*onPoll)(IO_TYPE type, float value) = NULL;
-  bool onRefresh();
+  void onRefresh();
   unsigned int responsWaitTime       = 900; // 900 ms for reads, 600 ms for
                                             // temperature and calibrate
   int I2CAddress                     = 0;

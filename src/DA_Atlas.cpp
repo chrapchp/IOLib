@@ -140,12 +140,12 @@ void DA_Atlas::doRead()
 
 // each poll request alternates between send command and read the results
 // no call to delay()
-bool DA_Atlas::onRefresh()
+void DA_Atlas::onRefresh()
 {
   if (!isConnected())
   {
 
-    return false;
+    return;
   }
 
   switch (probeState)
@@ -182,7 +182,7 @@ bool DA_Atlas::onRefresh()
 
     // statement(s);
   }
-  return true;
+
 }
 
 void DA_Atlas::setOnPollCallBack(void (*callBack)(IO_TYPE type,
